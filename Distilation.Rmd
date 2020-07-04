@@ -1,0 +1,549 @@
+---
+title: "Distilation"
+author: "Nicolas"
+date: "21/1/2020"
+output: pdf_document
+---
+```{r echo=FALSE, message=FALSE, warning=FALSE} 
+#Cargamos librerias
+library(lubridate)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(rmarkdown)
+library(mosaicData)
+library(stringr)
+library(htmlwidgets)
+library(ggthemes)
+library(pander)
+library(xtable)
+library(reshape2)
+library(scales)
+library(abind)
+library(data.table)
+library(knitr)
+library(broom)
+library(compare)
+```
+
+```{r}
+#Arme los datos de la siguiente manera
+#En general los nombres de data frame arrancan con el nombre del modelo, despues dicen cual es el experimento y finalmente aclaran si se trata de datos estructurales (area y entropia shanon) o datos de concentraciones (data).
+#Por ejemplo:
+VesicularT0CisternAreaData
+#1-Los datos frames que terminan con AreaData son datos de cisternArea.csv
+#2-Los datos frames que terminan con Data son datos ResultsIntrTransp3.csv
+#3-Luego armamos matrices con los datos, esto aun no esta automatizado para tomar todos los .csv's que haya en una carpeta.
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns0.5Areanames<-list.files(path = "/home/user/Desktop/Pasantia/Distilation/TubuleTropism0.5/", pattern = "cisternsArea*", full.names = T)
+
+Distilation0.5AreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0.5Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0.5Areanames[i],header=TRUE,sep=",")
+  Distilation0.5AreaData<-bind_cols(Distilation0.5AreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Distilation0.5AreaData<-(SubjectDataM<-read.csv(Cisterns0.5Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5CisternAreaData,'/home/usuario/Escritorio/Pasantia/FroozenEndosomes/5cisternas/Maturation5CisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns0.8Areanames<-list.files(path = "/home/user/Desktop/Pasantia/Distilation/TubuleTropism0.8/", pattern = "cisternsArea*", full.names = T)
+
+Distilation0.8AreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0.8Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0.8Areanames[i],header=TRUE,sep=",")
+  Distilation0.8AreaData<-bind_cols(Distilation0.8AreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Distilation0.8AreaData<-(SubjectDataM<-read.csv(Cisterns0.8Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5CisternAreaData,'/home/usuario/Escritorio/Pasantia/FroozenEndosomes/5cisternas/Maturation5CisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns1Areanames<-list.files(path = "/home/user/Desktop/Pasantia/Distilation/TubuleTropism1/", pattern = "cisternsArea*", full.names = T)
+
+Distilation1AreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns1Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns1Areanames[i],header=TRUE,sep=",")
+  Distilation1AreaData<-bind_cols(Distilation1AreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Distilation1AreaData<-(SubjectDataM<-read.csv(Cisterns1Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5CisternAreaData,'/home/usuario/Escritorio/Pasantia/FroozenEndosomes/5cisternas/Maturation5CisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+C0.5names<-list.files(path = "/home/user/Desktop/Pasantia/Distilation/TubuleTropism0.5/", pattern = "ResultsIntrTransp3*", full.names = T)
+Distilation0.5Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(C0.5names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(C0.5names[i],header=TRUE,sep=",")
+  Distilation0.5Data<-bind_cols(Distilation0.5Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Distilation0.5Data<-(SubjectDataM<-read.table(C0.5names[i],header=TRUE,sep=","))
+}}
+#write.csv(Maturation5Data,'/home/usuario/Escritorio/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+C0.8names<-list.files(path = "/home/user/Desktop/Pasantia/Distilation/TubuleTropism0.8/", pattern = "ResultsIntrTransp3*", full.names = T)
+Distilation0.8Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(C0.8names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(C0.8names[i],header=TRUE,sep=",")
+  Distilation0.8Data<-bind_cols(Distilation0.8Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Distilation0.8Data<-(SubjectDataM<-read.table(C0.8names[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5Data,'/home/usuario/Escritorio/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+C1names<-list.files(path = "/home/user/Desktop/Pasantia/Distilation/TubuleTropism1/", pattern = "ResultsIntrTransp3*", full.names = T)
+Distilation1Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(C1names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(C1names[i],header=TRUE,sep=",")
+  Distilation1Data<-bind_cols(Distilation1Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Distilation1Data<-(SubjectDataM<-read.table(C1names[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5Data,'/home/usuario/Escritorio/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/DistilationTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/DistilationTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/DistilationTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.5/DistilationCisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism0.8/DistilationCisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/usuario/Escritorio/Pasantia/Distilation/TubuleTropism1/DistilationCisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(Distilation0.5AreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(Distilation0.5AreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(Distilation0.5AreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(Distilation0.5AreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(Distilation0.5AreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioD0.5CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD0.5CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD0.5CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD0.5CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(title='cisternae area',x="ticks",y="relative area")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+scale_y_continuous(limits = c(0, 1))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio0.5.png",plot = CisternAreaGrafPromedio)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(Distilation0.8AreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(Distilation0.8AreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(Distilation0.8AreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(Distilation0.8AreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(Distilation0.8AreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioD0.8CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD0.8CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD0.8CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD0.8CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(title='cisternae area',x="ticks",y="relative area")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+scale_y_continuous(limits = c(0, 1))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio0.8.png",plot = CisternAreaGrafPromedio)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(Distilation1AreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(Distilation1AreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(Distilation1AreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(Distilation1AreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(Distilation1AreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioD1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(title='cisternae area',x="ticks",y="relative area")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+scale_y_continuous(limits = c(0, 1))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio1.png",plot = CisternAreaGrafPromedio)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+Cisterns<-rowMeans(Distilation0.5AreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+Vesicules<-rowMeans(Distilation0.5AreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioD0.5CisternArea<-data.frame(Vesicules,Cisterns)
+
+n<-length(dataframepromedioD0.5CisternArea$Vesicules)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD0.5CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD0.5CisternArea,id.vars="ticks")
+CisternVesiculesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) + geom_point()+geom_line()+labs(title='vesicules and cisternae',x="ticks",y="Number")+ scale_color_manual(values = c("Vesicules" = "blue","Cisterns"="red"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+scale_y_continuous(limits = c(0, 30))
+CisternVesiculesPromedio
+ggsave("CisternVesiculesPromedio0.5.png",plot = CisternVesiculesPromedio)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+Cisterns<-rowMeans(Distilation0.8AreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+Vesicules<-rowMeans(Distilation0.8AreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioD0.8CisternArea<-data.frame(Vesicules,Cisterns)
+
+n<-length(dataframepromedioD0.8CisternArea$Vesicules)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD0.8CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD0.8CisternArea,id.vars="ticks")
+CisternVesiculesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) + geom_point()+geom_line()+labs(title='vesicules and cisternae',x="ticks",y="Number")+ scale_color_manual(values = c("Vesicules" = "blue","Cisterns"="red"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+scale_y_continuous(limits = c(0, 30))
+CisternVesiculesPromedio
+ggsave("CisternVesiculesPromedio0.8.png",plot = CisternVesiculesPromedio)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+Cisterns<-rowMeans(Distilation1AreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+Vesicules<-rowMeans(Distilation1AreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioD1CisternArea<-data.frame(Vesicules,Cisterns)
+
+n<-length(dataframepromedioD1CisternArea$Vesicules)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternVesiculesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) + geom_point()+geom_line()+labs(title='vesicules and cisternae',x="ticks",y="Number")+ scale_color_manual(values = c("Vesicules" = "blue","Cisterns"="red"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+scale_y_continuous(limits = c(0, 30))
+CisternVesiculesPromedio
+ggsave("CisternVesiculesPromedio1.png",plot = CisternVesiculesPromedio)
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(Distilation0.5AreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(Distilation0.5AreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+dataframepromedioD0.5Entropy<-data.frame(Entropy,IndEntropy)
+n<-length(dataframepromedioD0.5Entropy$Entropy)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD0.5Entropy$ticks<-ticks
+d1<-melt(dataframepromedioD0.5Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(title='membrane domains separation',x="ticks",y="Entropy="-Sigma~"p*ln(p)")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0,1.8))+ scale_color_manual(values = c("Entropy" = "blue","IndEntropy"="red"))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio0.5.png",plot = EntropyGrafDPromedio )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(Distilation0.8AreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(Distilation0.8AreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+dataframepromedioD0.8Entropy<-data.frame(Entropy,IndEntropy)
+n<-length(dataframepromedioD0.8Entropy$Entropy)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD0.8Entropy$ticks<-ticks
+d1<-melt(dataframepromedioD0.8Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(title='membrane domains separation',x="ticks",y="Entropy="-Sigma~"p*ln(p)")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0,1.8))+ scale_color_manual(values = c("Entropy" = "blue","IndEntropy"="red"))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio0.8.png",plot = EntropyGrafDPromedio )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(Distilation1AreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(Distilation1AreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+dataframepromedioD1Entropy<-data.frame(Entropy,IndEntropy)
+n<-length(dataframepromedioD1Entropy$Entropy)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1Entropy$ticks<-ticks
+d1<-melt(dataframepromedioD1Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(title='membrane domains separation',x="ticks",y="Entropy="-Sigma~"p*ln(p)")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0,1.8))+ scale_color_manual(values = c("Entropy" = "blue","IndEntropy"="red"))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio1.png",plot = EntropyGrafDPromedio )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+PostGolgi2<- data.frame(matrix(ncol = 2, nrow = nrow(Distilation0.5Data)))
+
+#PostGolgi2<-data_frame()
+#paste("hola","1",sep = "")
+
+for (i in 1:ncol(PostGolgi2)){
+  PostGolgi2[,i]<-rowMeans(select(Distilation0.5Data, contains(paste("solL",as.character(i),sep =""))))
+  colnames(PostGolgi2)[i] <- paste("solL",as.character(i),sep ="")}
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+solLRecy<-rowMeans(Distilation0.5Data[,c("solL","solL1","solL2")])
+RabA<-rowMeans(Distilation0.5Data[,c("solLRabA","solLRabA1","solLRabA2")])
+RabB<-rowMeans(Distilation0.5Data[,c("solLRabB","solLRabB1","solLRabB2")])
+RabC<-rowMeans(Distilation0.5Data[,c("solLRabC","solLRabC1","solLRabC2")])
+RabD<-rowMeans(Distilation0.5Data[,c("solLRabD","solLRabD1","solLRabD2")])
+RabE<-rowMeans(Distilation0.5Data[,c("solLRabE","solLRabE1","solLRabE2")])
+dataframepromedio0.5CsolL<-data.frame(RabA,RabB,RabC,RabD,RabE,solLRecy)
+n<-length(dataframepromedio0.5CsolL$RabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromedio0.5CsolL$ticks<-ticks
+d1<-melt(dataframepromedio0.5CsolL,id.vars="ticks")
+ 
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solL") +scale_color_manual(values = c("RabA" = "blue", "RabB" = "skyblue2","RabC"="green4","RabD"="red","RabE"="yellow","solLRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 320000))
+solLGrafDPromedio
+ggsave("solLGrafDPromedio0.5.png",plot = solLGrafDPromedio )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+solLRecy<-rowMeans(Distilation0.9Data[,c("solL","solL1","solL2")])
+RabA<-rowMeans(Distilation0.9Data[,c("solLRabA","solLRabA1","solLRabA2")])
+RabB<-rowMeans(Distilation0.9Data[,c("solLRabB","solLRabB1","solLRabB2")])
+RabC<-rowMeans(Distilation0.9Data[,c("solLRabC","solLRabC1","solLRabC2")])
+RabD<-rowMeans(Distilation0.9Data[,c("solLRabD","solLRabD1","solLRabD2")])
+RabE<-rowMeans(Distilation0.9Data[,c("solLRabE","solLRabE1","solLRabE2")])
+dataframepromedio0.9CsolL<-data.frame(RabA,RabB,RabC,RabD,RabE,solLRecy)
+n<-length(dataframepromedio0.9CsolL$RabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromedio0.9CsolL$ticks<-ticks
+d1<-melt(dataframepromedio0.9CsolL,id.vars="ticks")
+ 
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solL") +scale_color_manual(values = c("RabA" = "blue", "RabB" = "skyblue2","RabC"="green4","RabD"="red","RabE"="yellow","solLRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))#+scale_y_continuous(limits = c(0, 320000))
+solLGrafDPromedio
+ggsave("solLGrafDPromedio0.9.png",plot = solLGrafDPromedio )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+solLRecy<-rowMeans(Distilation1Data[,c("solL","solL1","solL2")])
+RabA<-rowMeans(Distilation1Data[,c("solLRabA","solLRabA1","solLRabA2")])
+RabB<-rowMeans(Distilation1Data[,c("solLRabB","solLRabB1","solLRabB2")])
+RabC<-rowMeans(Distilation1Data[,c("solLRabC","solLRabC1","solLRabC2")])
+RabD<-rowMeans(Distilation1Data[,c("solLRabD","solLRabD1","solLRabD2")])
+RabE<-rowMeans(Distilation1Data[,c("solLRabE","solLRabE1","solLRabE2")])
+dataframepromedio1CsolL<-data.frame(RabA,RabB,RabC,RabD,RabE,solLRecy)
+n<-length(dataframepromedio1CsolL$RabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromedio1CsolL$ticks<-ticks
+d1<-melt(dataframepromedio1CsolL,id.vars="ticks")
+ 
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solL") +scale_color_manual(values = c("RabA" = "blue", "RabB" = "skyblue2","RabC"="green4","RabD"="red","RabE"="yellow","solLRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 320000))
+solLGrafDPromedio
+ggsave("solLGrafDPromedio1.png",plot = solLGrafDPromedio )
+```
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+solSRecy<-rowMeans(Distilation0.5Data[,c("solS","solS1","solS2")])
+
+solSRabA<-rowMeans(Distilation0.5Data[,c("solSRabA","solSRabA1","solSRabA2")])
+solSRabB<-rowMeans(Distilation0.5Data[,c("solSRabB","solSRabB1","solSRabB2")])
+solSRabC<-rowMeans(Distilation0.5Data[,c("solSRabC","solSRabC1","solSRabC2")])
+solSRabD<-rowMeans(Distilation0.5Data[,c("solSRabD","solSRabD1","solSRabD2")])
+solSRabE<-rowMeans(Distilation0.5Data[,c("solSRabE","solSRabE1","solSRabE2")])
+dataframepromM0.5CsolS<-data_frame(solSRabA,solSRabD,solSRabC,solSRabB,solSRabE,solSRecy)
+n<-length(dataframepromM0.5CsolS$solSRabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.5CsolS$ticks<-ticks
+dsolS<-melt(dataframepromM0.5CsolS,id.vars="ticks")
+solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solS") +scale_color_manual(values = c("solSRabA" = "blue", "solSRabB" = "skyblue2","solSRabC"="green4","solSRabD"="red","solSRabE"="yellow","solSRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))#+scale_y_continuous(limits = c(0, 250000))
+solSGraf
+ggsave("solSGraf0.5.png",plot = solSGraf )
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+solSRecy<-rowMeans(Distilation0.8Data[,c("solS","solS1","solS2")])
+
+solSRabA<-rowMeans(Distilation0.8Data[,c("solSRabA","solSRabA1","solSRabA2")])
+solSRabB<-rowMeans(Distilation0.8Data[,c("solSRabB","solSRabB1","solSRabB2")])
+solSRabC<-rowMeans(Distilation0.8Data[,c("solSRabC","solSRabC1","solSRabC2")])
+solSRabD<-rowMeans(Distilation0.8Data[,c("solSRabD","solSRabD1","solSRabD2")])
+solSRabE<-rowMeans(Distilation0.8Data[,c("solSRabE","solSRabE1","solSRabE2")])
+dataframepromM0.8CsolS<-data_frame(solSRabA,solSRabD,solSRabC,solSRabB,solSRabE,solSRecy)
+n<-length(dataframepromM0.8CsolS$solSRabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.8CsolS$ticks<-ticks
+dsolS<-melt(dataframepromM0.8CsolS,id.vars="ticks")
+solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solS") +scale_color_manual(values = c("solSRabA" = "blue", "solSRabB" = "skyblue2","solSRabC"="green4","solSRabD"="red","solSRabE"="yellow","solSRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))#+scale_y_continuous(limits = c(0, 250000))
+solSGraf
+ggsave("solSGraf0.8.png",plot = solSGraf )
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+solSRecy<-rowMeans(Distilation1Data[,c("solS","solS1","solS2")])
+
+solSRabA<-rowMeans(Distilation1Data[,c("solSRabA","solSRabA1","solSRabA2")])
+solSRabB<-rowMeans(Distilation1Data[,c("solSRabB","solSRabB1","solSRabB2")])
+solSRabC<-rowMeans(Distilation1Data[,c("solSRabC","solSRabC1","solSRabC2")])
+solSRabD<-rowMeans(Distilation1Data[,c("solSRabD","solSRabD1","solSRabD2")])
+solSRabE<-rowMeans(Distilation1Data[,c("solSRabE","solSRabE1","solSRabE2")])
+dataframepromM1CsolS<-data_frame(solSRabA,solSRabD,solSRabC,solSRabB,solSRabE,solSRecy)
+n<-length(dataframepromM1CsolS$solSRabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromM1CsolS$ticks<-ticks
+dsolS<-melt(dataframepromM1CsolS,id.vars="ticks")
+solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solS") +scale_color_manual(values = c("solSRabA" = "blue", "solSRabB" = "skyblue2","solSRabC"="green4","solSRabD"="red","solSRabE"="yellow","solSRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))#+scale_y_continuous(limits = c(0, 250000))
+solSGraf
+ggsave("solSGraf1.png",plot = solSGraf )
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+memGolgiMedialRecy<-rowMeans(Distilation0.5Data[,c("memGolgiMedial","memGolgiMedial1","memGolgiMedial2")])
+memGolgiMedialRabA<-rowMeans(Distilation0.5Data[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2")])
+memGolgiMedialRabB<-rowMeans(Distilation0.5Data[,c("memGolgiMedialRabB","memGolgiMedialRabB1","memGolgiMedialRabB2")])
+memGolgiMedialRabC<-rowMeans(Distilation0.5Data[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2")])
+memGolgiMedialRabD<-rowMeans(Distilation0.5Data[,c("memGolgiMedialRabD","memGolgiMedialRabD1","memGolgiMedialRabD2")])
+memGolgiMedialRabE<-rowMeans(Distilation0.5Data[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2")])
+dataframepromM0.5CmemGolgiMedial<-data.frame(memGolgiMedialRabA,memGolgiMedialRabD,memGolgiMedialRabC,memGolgiMedialRabB,memGolgiMedialRabE,memGolgiMedialRecy)
+n<-length(dataframepromM0.5CmemGolgiMedial$memGolgiMedialRabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.5CmemGolgiMedial$ticks<-ticks
+dmemGolgiMedial<-melt(dataframepromM0.5CmemGolgiMedial,id.vars="ticks")
+memGolgiMedialGraf<-ggplot(dmemGolgiMedial,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="memGolgiMedial") +scale_color_manual(values = c("memGolgiMedialRabA" = "blue", "memGolgiMedialRabB" = "skyblue2","memGolgiMedialRabC"="green4","memGolgiMedialRabD"="red","memGolgiMedialRabE"="yellow","memGolgiMedialRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 20000))
+
+memGolgiMedialGraf
+ggsave("memGolgiMedialGraf0.5.png",plot = memGolgiMedialGraf )
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+memGolgiMedialRecy<-rowMeans(Distilation0.8Data[,c("memGolgiMedial","memGolgiMedial1","memGolgiMedial2")])
+memGolgiMedialRabA<-rowMeans(Distilation0.8Data[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2")])
+memGolgiMedialRabB<-rowMeans(Distilation0.8Data[,c("memGolgiMedialRabB","memGolgiMedialRabB1","memGolgiMedialRabB2")])
+memGolgiMedialRabC<-rowMeans(Distilation0.8Data[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2")])
+memGolgiMedialRabD<-rowMeans(Distilation0.8Data[,c("memGolgiMedialRabD","memGolgiMedialRabD1","memGolgiMedialRabD2")])
+memGolgiMedialRabE<-rowMeans(Distilation0.8Data[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2")])
+dataframepromM0.8CmemGolgiMedial<-data.frame(memGolgiMedialRabA,memGolgiMedialRabD,memGolgiMedialRabC,memGolgiMedialRabB,memGolgiMedialRabE,memGolgiMedialRecy)
+n<-length(dataframepromM0.8CmemGolgiMedial$memGolgiMedialRabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.8CmemGolgiMedial$ticks<-ticks
+dmemGolgiMedial<-melt(dataframepromM0.8CmemGolgiMedial,id.vars="ticks")
+memGolgiMedialGraf<-ggplot(dmemGolgiMedial,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="memGolgiMedial") +scale_color_manual(values = c("memGolgiMedialRabA" = "blue", "memGolgiMedialRabB" = "skyblue2","memGolgiMedialRabC"="green4","memGolgiMedialRabD"="red","memGolgiMedialRabE"="yellow","memGolgiMedialRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 20000))
+
+memGolgiMedialGraf
+ggsave("memGolgiMedialGraf0.8.png",plot = memGolgiMedialGraf )
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+memGolgiMedialRecy<-rowMeans(Distilation1Data[,c("memGolgiMedial","memGolgiMedial1","memGolgiMedial2")])
+memGolgiMedialRabA<-rowMeans(Distilation1Data[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2")])
+memGolgiMedialRabB<-rowMeans(Distilation1Data[,c("memGolgiMedialRabB","memGolgiMedialRabB1","memGolgiMedialRabB2")])
+memGolgiMedialRabC<-rowMeans(Distilation1Data[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2")])
+memGolgiMedialRabD<-rowMeans(Distilation1Data[,c("memGolgiMedialRabD","memGolgiMedialRabD1","memGolgiMedialRabD2")])
+memGolgiMedialRabE<-rowMeans(Distilation1Data[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2")])
+dataframepromM1CmemGolgiMedial<-data.frame(memGolgiMedialRabA,memGolgiMedialRabD,memGolgiMedialRabC,memGolgiMedialRabB,memGolgiMedialRabE,memGolgiMedialRecy)
+n<-length(dataframepromM1CmemGolgiMedial$memGolgiMedialRabA)*100
+ticks<-seq(100,n,by=100)
+dataframepromM1CmemGolgiMedial$ticks<-ticks
+dmemGolgiMedial<-melt(dataframepromM1CmemGolgiMedial,id.vars="ticks")
+memGolgiMedialGraf<-ggplot(dmemGolgiMedial,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="memGolgiMedial") +scale_color_manual(values = c("memGolgiMedialRabA" = "blue", "memGolgiMedialRabB" = "skyblue2","memGolgiMedialRabC"="green4","memGolgiMedialRabD"="red","memGolgiMedialRabE"="yellow","memGolgiMedialRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 20000))
+
+memGolgiMedialGraf
+ggsave("memGolgiMedialGraf1.png",plot = memGolgiMedialGraf )
+
+```

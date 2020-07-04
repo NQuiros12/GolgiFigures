@@ -1,0 +1,193 @@
+---
+title: "DistilationCopasi"
+author: "Nicolas"
+date: "6/2/2020"
+output: pdf_document
+---
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(lubridate)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(rmarkdown)
+library(mosaicData)
+library(stringr)
+library(htmlwidgets)
+library(ggthemes)
+library(pander)
+library(xtable)
+library(reshape2)
+library(scales)
+library(abind)
+library(data.table)
+library(knitr)
+library(broom)
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DistilationCopAreanames<-c('/home/user/Desktop/Pasantia/DistilationCopasi/cisternsArea.csv','/home/user/Desktop/Pasantia/DistilationCopasi/cisternsArea (2).csv','/home/user/Desktop/Pasantia/DistilationCopasi/cisternsArea (3).csv')
+
+DistilationCopCisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(DistilationCopAreanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(DistilationCopAreanames[i],header=TRUE,sep=",")
+  DistilationCopCisternAreaData<-bind_cols(DistilationCopCisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){DistilationCopCisternAreaData<-(SubjectDataM<-read.csv(DistilationCopAreanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(DistilationCopCisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/0.05cisternas/DistilationCopCisternAreaData',row.names = T)
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DistilationCopnames<-c('/home/user/Desktop/Pasantia/DistilationCopasi/ResultsIntrTransp3Distilation.csv')
+DistilationCopasiData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(DistilationCopnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(DistilationCopnames[i],header=TRUE,sep=",")
+  DistilationCopasiData<-bind_cols(DistilationCopasiData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){DistilationCopasiData<-(SubjectDataM<-read.table(DistilationCopnames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-(DistilationCopasiData[,c("memS")])
+
+C1<-DistilationCopasiData[,c("memSRabA")]
+C2<-(DistilationCopasiData[,c("memSRabB")])
+C3<-(DistilationCopasiData[,c("memSRabC")])
+C4<-(DistilationCopasiData[,c("memSRabD")])
+C5<-(DistilationCopasiData[,c("memSRabE")])
+dataframepromM0.1CmemS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemS$ticks<-ticks
+dmemS<-melt(dataframepromM0.1CmemS,id.vars="ticks")
+memSGraf<-ggplot(dmemS,aes(x=ticks,y=value,color=variable))+geom_point(size=45)+geom_line(size=20)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(axis.text = element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=12),axis.ticks = element_line(colour = "black", size = 10))+theme( axis.ticks.length=unit(2, "cm"),axis.ticks.margin=unit(0.5,"cm"))+ylim(0, 1)+ scale_x_continuous(limits = c(0,1550),expand = c(0,0))
+memSGraf
+ggsave("memSCopGraf.png",plot = memSGraf , width = 35, height = 30, dpi = 200, units = "in", device='png')
+```
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+#En este caso veo que el grafico no arranca desde cero, probablemente porque en el momento cero no estaba presente dicho sustrato, ya que es una proteina que entra sin glicosilacion
+PostGolgi<-(DistilationCopasiData[,c("memS1")])
+C1<-DistilationCopasiData[,c("memS1RabA")]
+C2<-(DistilationCopasiData[,c("memS1RabB")])
+C3<-(DistilationCopasiData[,c("memS1RabC")])
+C4<-(DistilationCopasiData[,c("memS1RabD")])
+C5<-(DistilationCopasiData[,c("memS1RabE")])
+dataframepromM0.1CmemS1<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemS1$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemS1$ticks<-ticks
+dmemS1<-melt(dataframepromM0.1CmemS1,id.vars="ticks")
+memS1Graf<-ggplot(dmemS1,aes(x=ticks,y=value,color=variable))+geom_point(size=45)+geom_line(size=10)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+   theme(legend.title=element_blank())+theme(axis.text = element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=12),axis.ticks = element_line(colour = "black", size = 10))+theme( axis.ticks.length=unit(2, "cm"),axis.ticks.margin=unit(0.5,"cm"))+ scale_x_continuous(breaks = c(0,1000,2000,3000))+ylim(0, 1)+xlim(0,3000)
+memS1Graf
+ggsave("memS1CopGraf.png",plot = memS1Graf ,  width = 35, height = 30, dpi = 200, units = "in", device='png')
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-(DistilationCopasiData[,c("memS2")])
+
+C1<-DistilationCopasiData[,c("memS2RabA")]
+C2<-(DistilationCopasiData[,c("memS2RabB")])
+C3<-(DistilationCopasiData[,c("memS2RabC")])
+C4<-(DistilationCopasiData[,c("memS2RabD")])
+C5<-(DistilationCopasiData[,c("memS2RabE")])
+dataframepromM0.1CmemS2<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemS2$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemS2$ticks<-ticks
+dmemS2<-melt(dataframepromM0.1CmemS2,id.vars="ticks")
+memS2Graf<-ggplot(dmemS2,aes(x=ticks,y=value,color=variable))+geom_point(size=45)+geom_line(size=10)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +  theme(legend.title=element_blank())+theme(axis.text = element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=12),axis.ticks = element_line(colour = "black", size = 10))+theme( axis.ticks.length=unit(2, "cm"),axis.ticks.margin=unit(0.5,"cm"))+xlim(0,9000)+ylim(0,0.20)#+scale_y_continuous(breaks=c(0,0.04,0.08,0.12,0.16))
+memS2Graf
+ggsave("memS2CopGraf.png",plot = memS2Graf ,  width = 35, height = 30, dpi = 200, units = "in", device='png')
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-(DistilationCopasiData[,c("memS3")])
+
+C1<-DistilationCopasiData[,c("memS3RabA")]
+C2<-(DistilationCopasiData[,c("memS3RabB")])
+C3<-(DistilationCopasiData[,c("memS3RabC")])
+C4<-(DistilationCopasiData[,c("memS3RabD")])
+C5<-(DistilationCopasiData[,c("memS3RabE")])
+dataframepromM0.1CmemS3<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemS3$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemS3$ticks<-ticks
+dmemS3<-melt(dataframepromM0.1CmemS3,id.vars="ticks")
+memS3Graf<-ggplot(dmemS3,aes(x=ticks,y=value,color=variable))+geom_point(size=45)+geom_line(size=10)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +  theme(legend.title=element_blank())+theme(axis.text = element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=12),axis.ticks = element_line(colour = "black", size = 10))+theme( axis.ticks.length=unit(2, "cm"),axis.ticks.margin=unit(0.5,"cm"))+ylim(0,1)+xlim(0,30000)
+memS3Graf
+ggsave("memS3CopGraf.png",plot = memS3Graf ,  width = 35, height = 30, dpi = 200, units = "in", device='png')
+```
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-(DistilationCopasiData[,c("memERGIC")])
+#De aca para adelante yo le sacaria el post-golgi. qeuda feo y no da mucha informacion.
+C1<-DistilationCopasiData[,c("memERGICRabA")]
+C2<-(DistilationCopasiData[,c("memERGICRabB")])
+C3<-(DistilationCopasiData[,c("memERGICRabC")])
+C4<-(DistilationCopasiData[,c("memERGICRabD")])
+C5<-(DistilationCopasiData[,c("memERGICRabE")])
+dataframepromM0.1CmemERGIC<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemERGIC$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemERGIC$ticks<-ticks
+dmemERGIC<-melt(dataframepromM0.1CmemERGIC,id.vars="ticks")
+memERGICGraf<-ggplot(dmemERGIC,aes(x=ticks,y=value,color=variable))+geom_point(size=45)+geom_line(size=10)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +  theme(legend.title=element_blank())+theme(axis.text = element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=12),axis.ticks = element_line(colour = "black", size = 10))+theme( axis.ticks.length=unit(2, "cm"),axis.ticks.margin=unit(0.5,"cm"))+ylim(0,1)+scale_x_continuous(breaks=c(0,15000,30000))
+memTGNGraf
+ggsave("memERGICCopGraf.png",plot = memERGICGraf ,  width = 35, height = 30, dpi = 200, units = "in", device='png')
+```
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-(DistilationCopasiData[,c("memGolgiMedial")])
+
+C1<-DistilationCopasiData[,c("memGolgiMedialRabA")]
+C2<-(DistilationCopasiData[,c("memGolgiMedialRabB")])
+C3<-(DistilationCopasiData[,c("memGolgiMedialRabC")])
+C4<-(DistilationCopasiData[,c("memGolgiMedialRabD")])
+C5<-(DistilationCopasiData[,c("memGolgiMedialRabE")])
+dataframepromM0.1CmemGolgiMedial<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemGolgiMedial$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemGolgiMedial$ticks<-ticks
+dmemGolgiMedial<-melt(dataframepromM0.1CmemGolgiMedial,id.vars="ticks")
+memGolgiMedialGraf<-ggplot(dmemGolgiMedial,aes(x=ticks,y=value,color=variable))+geom_point(size=45)+geom_line(size=10)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +  theme(legend.title=element_blank())+theme(axis.text = element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=12),axis.ticks = element_line(colour = "black", size = 10))+theme( axis.ticks.length=unit(2, "cm"),axis.ticks.margin=unit(0.5,"cm"))+ylim(0,1)+scale_x_continuous(breaks=c(0,15000,30000))
+memTGNGraf
+ggsave("memGolgiMedialCopGraf.png",plot = memGolgiMedialGraf ,  width = 35, height = 30, dpi = 200, units = "in", device='png')
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-(DistilationCopasiData[,c("memTGN")])
+
+C1<-DistilationCopasiData[,c("memTGNRabA")]
+C2<-(DistilationCopasiData[,c("memTGNRabB")])
+C3<-(DistilationCopasiData[,c("memTGNRabC")])
+C4<-(DistilationCopasiData[,c("memTGNRabD")])
+C5<-(DistilationCopasiData[,c("memTGNRabE")])
+dataframepromM0.1CmemTGN<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemTGN$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemTGN$ticks<-ticks
+dmemTGN<-melt(dataframepromM0.1CmemTGN,id.vars="ticks")
+memTGNGraf<-ggplot(dmemTGN,aes(x=ticks,y=value,color=variable))+geom_point(size=45)+geom_line(size=10)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +  theme(legend.title=element_blank(),axis.text = element_blank(),plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=12),axis.ticks = element_line(colour = "black", size = 10))+theme( axis.ticks.length=unit(2, "cm"),axis.ticks.margin=unit(0.5,"cm"))+ylim(0,1)+scale_x_continuous(breaks=c(0,15000,30000))
+memTGNGraf
+ggsave("memTGNCopGraf.png",plot = memTGNGraf ,  width = 35, height = 30, dpi = 200, units = "in", device='png')
+```
+

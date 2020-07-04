@@ -1,0 +1,635 @@
+---
+title: "VesicularTransport"
+author: "Nicolas"
+date: "20/1/2020"
+output: pdf_document
+---
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(lubridate)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(rmarkdown)
+library(mosaicData)
+library(stringr)
+library(htmlwidgets)
+library(ggthemes)
+library(pander)
+library(xtable)
+library(reshape2)
+library(scales)
+library(abind)
+library(data.table)
+library(knitr)
+library(broom)
+```
+
+```{r}
+#Arme los datos de la siguiente manera
+#En general los nombres de data frame arrancan con el nombre del modelo, despues dicen cual es el experimento y finalmente aclaran si se trata de datos estructurales (area y entropia shanon) o datos de concentraciones (data).
+#Por ejemplo:
+VesicularT0CisternAreaData
+#1-Los datos frames que terminan con AreaData son datos de cisternArea.csv
+#2-Los datos frames que terminan con Data son datos ResultsIntrTransp3.csv
+#3-Luego armamos matrices con los datos, esto aun no esta automatizado para tomar todos los .csv's que haya en una carpeta.
+
+```
+
+```{r}
+Cisterns0AreaNames <-list.files(path = "/home/user/Desktop/Pasantia/VesicularTransport/p=0/", pattern = "cisternsArea*", full.names = T)
+
+VesicularT0CisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0AreaNames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0AreaNames[i],header=TRUE,sep=",")
+  VesicularT0CisternAreaData<-bind_cols(VesicularT0CisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularT0CisternAreaData<-(SubjectDataM<-read.csv(Cisterns0AreaNames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5CisternAreaData',row.names = T)
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns0.5Areanames<-list.files(path = "/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/", pattern = "cisternsArea*", full.names = T)
+VesicularT0.5CisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0.5Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0.5Areanames[i],header=TRUE,sep=",")
+  VesicularT0.5CisternAreaData<-bind_cols(VesicularT0.5CisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularT0.5CisternAreaData<-(SubjectDataM<-read.csv(Cisterns0.5Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5CisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns1Areanames<-list.files(path = "/home/user/Desktop/Pasantia/VesicularTransport/p=1/", pattern = "cisternsArea*", full.names = T)
+
+VesicularT1CisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns1Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns1Areanames[i],header=TRUE,sep=",")
+  VesicularT1CisternAreaData<-bind_cols(VesicularT1CisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularT1CisternAreaData<-(SubjectDataM<-read.csv(Cisterns1Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5CisternAreaData',row.names = T)
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+V0names<-list.files(path = "/home/user/Desktop/Pasantia/VesicularTransport/p=0/", pattern = "ResultsIntrTransp3*", full.names = T)
+VesicularT0Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(V0names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(V0names[i],header=TRUE,sep=",")
+  VesicularT0Data<-bind_cols(VesicularT0Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularT0Data<-(SubjectDataM<-read.table(V0names[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+V0.5names<-list.files(path = "/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/", pattern = "ResultsIntrTransp3*", full.names = T)
+VesicularT0.5Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(V0.5names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(V0.5names[i],header=TRUE,sep=",")
+  VesicularT0.5Data<-bind_cols(VesicularT0.5Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularT0.5Data<-(SubjectDataM<-read.table(V0.5names[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+V1names<-c('/home/user/Desktop/Pasantia/VesicularTransport/p=1/ResultsIntrTransp3.csv','/home/user/Desktop/Pasantia/VesicularTransport/p=1/ResultsIntrTransp3 (2).csv','/home/user/Desktop/Pasantia/VesicularTransport/p=1/ResultsIntrTransp3 (3).csv')
+VesicularT1Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(V1names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(V1names[i],header=TRUE,sep=",")
+  VesicularT1Data<-bind_cols(VesicularT1Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularT1Data<-(SubjectDataM<-read.table(V1names[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+V1Satnames<-c('/home/user/Desktop/Pasantia/VesicularTransport/p=1Sat/ResultsIntrTransp3.csv','/home/user/Desktop/Pasantia/VesicularTransport/p=1Sat/ResultsIntrTransp3 (2).csv','/home/user/Desktop/Pasantia/VesicularTransport/p=1Sat/ResultsIntrTransp3 (3).csv')
+VesicularT1SatData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(V1Satnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(V1Satnames[i],header=TRUE,sep=",")
+  VesicularT1SatData<-bind_cols(VesicularT1SatData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularT1SatData<-(SubjectDataM<-read.table(V1Satnames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/VesicularTransport/p=0/VesicularTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/VesicularTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/VesicularTransport/p=1/VesicularTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1Sat/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1Sat/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1Sat/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/VesicularTransport/p=1Sat/VesicularTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=1/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/VesicularTransport/p=1/VesicularCisternAreaData',row.names = T)
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/VesicularTransport/p=0.5/VesicularCisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+C2<-rowMeans(VesicularT0CisternAreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(VesicularT0CisternAreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(VesicularT0CisternAreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(VesicularT0CisternAreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(VesicularT0CisternAreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioM0CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioM0CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(title='',x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =5 ))+theme(axis.title = element_text(size = 5))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio0.png",plot = CisternAreaGrafPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+C2<-rowMeans(VesicularT0.5CisternAreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(VesicularT0.5CisternAreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(VesicularT0.5CisternAreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(VesicularT0.5CisternAreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(VesicularT0.5CisternAreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioM0.5CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioM0.5CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.5CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.5CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(title='',x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =5 ))+theme(axis.title = element_text(size = 5))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio0.5.png",plot = CisternAreaGrafPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(VesicularT1CisternAreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(VesicularT1CisternAreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(VesicularT1CisternAreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(VesicularT1CisternAreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(VesicularT1CisternAreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioM1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioM1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =5 ))+theme(axis.title = element_text(size = 5))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio1.png",plot = CisternAreaGrafPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+cisterns<-rowMeans(VesicularT0CisternAreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+vesicles<-rowMeans(VesicularT0CisternAreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioM0CisternArea<-data.frame(vesicles,cisterns)
+
+n<-length(dataframepromedioM0CisternArea$vesicles)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0CisternArea,id.vars="ticks")
+CisternvesiclesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) +  geom_point(size=12)+labs(x="",y="")+ scale_color_manual(values = c("vesicles" = "orange2","cisterns"="chocolate4"))+theme_classic()+ theme(legend.position="none") +theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(legend.text = element_text(size =15 ))+theme(axis.title = element_text(size = 15))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(axis.text = element_blank())
+CisternvesiclesPromedio
+ggsave("CisternvesiclesPromedio0.png",plot = CisternvesiclesPromedio, width = 26, height = 20, dpi = 150, units = "in",device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+cisterns<-rowMeans(VesicularT0.5CisternAreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+vesicles<-rowMeans(VesicularT0.5CisternAreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioM0.5CisternArea<-data.frame(vesicles,cisterns)
+
+n<-length(dataframepromedioM0.5CisternArea$vesicles)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.5CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.5CisternArea,id.vars="ticks")
+CisternvesiclesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) +  geom_point(size=12)+labs(x="",y="")+ scale_color_manual(values = c("vesicles" = "orange2","cisterns"="chocolate4"))+theme_classic()+ theme(legend.position="none") +theme(axis.text = element_blank())+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(legend.text = element_text(size =15 ))+theme(axis.title = element_text(size = 15))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+CisternvesiclesPromedio
+ggsave("CisternvesiclesPromedio0.5.png",plot = CisternvesiclesPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+cisterns<-rowMeans(VesicularT1CisternAreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+vesicles<-rowMeans(VesicularT1CisternAreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioM1CisternArea<-data.frame(vesicles,cisterns)
+
+n<-length(dataframepromedioM1CisternArea$vesicles)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM1CisternArea,id.vars="ticks")
+CisternvesiclesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) +  geom_point(size=12)+labs(x="",y="")+ scale_color_manual(values = c("vesicles" = "orange2","cisterns"="chocolate4"))+theme_classic()+ theme(legend.position="none") +theme(axis.text = element_blank())+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(legend.text = element_text(size =15 ))+theme(axis.title = element_text(size = 15))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+CisternvesiclesPromedio
+ggsave("CisternvesiclesPromedio1.png",plot = CisternvesiclesPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(VesicularT0CisternAreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(VesicularT0CisternAreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+dataframepromedioM0Entropy<-data.frame(Entropy,IndEntropy)
+
+
+names(dataframepromedioM0Entropy)[names(dataframepromedioM0Entropy) == "Entropy"] <- "intra-cisterna entropy"
+names(dataframepromedioM0Entropy)[names(dataframepromedioM0Entropy) == "IndEntropy"] <- "inter-cisternae entropy"
+n<-length(dataframepromedioM0Entropy$`intra-cisterna entropy`)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0Entropy$ticks<-ticks
+d1<-melt(dataframepromedioM0Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+labs(x="",y="")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="none") +
+theme(legend.title=element_blank())+ scale_color_manual(values = c("inter-cisternae entropy" = "khaki4","intra-cisterna entropy"="khaki3"))+guides(colour=guide_legend(override.aes = list(size = 25)))+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+ theme(legend.key.size = unit(6, "cm"))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio0.png",plot = EntropyGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(VesicularT0.5CisternAreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(VesicularT0.5CisternAreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+dataframepromedioM0.5Entropy<-data.frame(Entropy,IndEntropy)
+names(dataframepromedioM0.5Entropy)[names(dataframepromedioM0.5Entropy) == "Entropy"] <- "intra-cisterna entropy"
+names(dataframepromedioM0.5Entropy)[names(dataframepromedioM0.5Entropy) == "IndEntropy"] <- "inter-cisternae entropy"
+n<-length(dataframepromedioM0.5Entropy$`intra-cisterna entropy`)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.5Entropy$ticks<-ticks
+d1<-melt(dataframepromedioM0.5Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+labs(x="",y="")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="none") +
+theme(legend.title=element_blank())+ scale_color_manual(values = c("inter-cisternae entropy" = "khaki4","intra-cisterna entropy"="khaki3"))+guides(colour=guide_legend(override.aes = list(size = 25)))+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+ theme(legend.key.size = unit(6, "cm"))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio0.5.png",plot = EntropyGrafDPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(VesicularT1CisternAreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(VesicularT1CisternAreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+dataframepromedioM1Entropy<-data.frame(Entropy,IndEntropy)
+names(dataframepromedioM1Entropy)[names(dataframepromedioM1Entropy) == "Entropy"] <- "intra-cisterna entropy"
+names(dataframepromedioM1Entropy)[names(dataframepromedioM1Entropy) == "IndEntropy"] <- "inter-cisternae entropy"
+n<-length(dataframepromedioM1Entropy$`intra-cisterna entropy`)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM1Entropy$ticks<-ticks
+d1<-melt(dataframepromedioM1Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+labs(x="",y="")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="none") +
+theme(legend.title=element_blank())+ scale_color_manual(values = c("inter-cisternae entropy" = "khaki4","intra-cisterna entropy"="khaki3"))+guides(colour=guide_legend(override.aes = list(size = 25)))+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+ theme(legend.key.size = unit(6, "cm"))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio1.png",plot = EntropyGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# solLRecy<-rowMeans(VesicularT0Data[,c("solL","solL1","solL2")])
+# RabA<-rowMeans(VesicularT0Data[,c("solLRabA","solLRabA1","solLRabA2")])
+# RabB<-rowMeans(VesicularT0Data[,c("solLRabB","solLRabB1","solLRabB2")])
+# RabC<-rowMeans(VesicularT0Data[,c("solLRabC","solLRabC1","solLRabC2")])
+# RabD<-rowMeans(VesicularT0Data[,c("solLRabD","solLRabD1","solLRabD2")])
+# RabE<-rowMeans(VesicularT0Data[,c("solLRabE","solLRabE1","solLRabE2")])
+# dataframepromedio0CsolL<-data.frame(RabA,RabB,RabC,RabD,RabE,solLRecy)
+# n<-length(dataframepromedio0CsolL$RabA)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromedio0CsolL$ticks<-ticks
+# d1<-melt(dataframepromedio0CsolL,id.vars="ticks")
+#  
+# solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solL") +scale_color_manual(values = c("RabA" = "blue", "RabB" = "skyblue2","RabC"="green4","RabD"="red","RabE"="yellow","solLRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+#   theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 350000))
+# solLGrafDPromedio
+# ggsave("solLGrafDPromedio0.png",plot = solLGrafDPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# solLRecy<-rowMeans(VesicularT0.5Data[,c("solL","solL1","solL2")])
+# RabA<-rowMeans(VesicularT0.5Data[,c("solLRabA","solLRabA1","solLRabA2")])
+# RabB<-rowMeans(VesicularT0.5Data[,c("solLRabB","solLRabB1","solLRabB2")])
+# RabC<-rowMeans(VesicularT0.5Data[,c("solLRabC","solLRabC1","solLRabC2")])
+# RabD<-rowMeans(VesicularT0.5Data[,c("solLRabD","solLRabD1","solLRabD2")])
+# RabE<-rowMeans(VesicularT0.5Data[,c("solLRabE","solLRabE1","solLRabE2")])
+# dataframepromedio0.5CsolL<-data.frame(RabA,RabB,RabC,RabD,RabE,solLRecy)
+# n<-length(dataframepromedio0.5CsolL$RabA)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromedio0.5CsolL$ticks<-ticks
+# d1<-melt(dataframepromedio0.5CsolL,id.vars="ticks")
+#  
+# solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solL") +scale_color_manual(values = c("RabA" = "blue", "RabB" = "skyblue2","RabC"="green4","RabD"="red","RabE"="yellow","solLRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+#   theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 350000))
+# solLGrafDPromedio
+# ggsave("solLGrafDPromedio0.5.png",plot = solLGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(VesicularT1Data[,c("solL","solL1","solL2")])
+C1<-rowMeans(VesicularT1Data[,c("solLRabA","solLRabA1","solLRabA2")])
+C2<-rowMeans(VesicularT1Data[,c("solLRabB","solLRabB1","solLRabB2")])
+C3<-rowMeans(VesicularT1Data[,c("solLRabC","solLRabC1","solLRabC2")])
+C4<-rowMeans(VesicularT1Data[,c("solLRabD","solLRabD1","solLRabD2")])
+C5<-rowMeans(VesicularT1Data[,c("solLRabE","solLRabE1","solLRabE2")])
+dataframepromedio1CsolL<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromedio1CsolL$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedio1CsolL$ticks<-ticks
+d1<-melt(dataframepromedio1CsolL,id.vars="ticks")
+ 
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(axis.text = element_blank())+ylim(0,2)
+solLGrafDPromedio
+ggsave("solLGrafDPromedio1.png",plot = solLGrafDPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# solLRecy<-rowMeans(VesicularT1SatData[,c("solL","solL1","solL2")])
+# RabA<-rowMeans(VesicularT1SatData[,c("solLRabA","solLRabA1","solLRabA2")])
+# RabB<-rowMeans(VesicularT1SatData[,c("solLRabB","solLRabB1","solLRabB2")])
+# RabC<-rowMeans(VesicularT1SatData[,c("solLRabC","solLRabC1","solLRabC2")])
+# RabD<-rowMeans(VesicularT1SatData[,c("solLRabD","solLRabD1","solLRabD2")])
+# RabE<-rowMeans(VesicularT1SatData[,c("solLRabE","solLRabE1","solLRabE2")])
+# dataframepromedio1SatCsolL<-data.frame(RabA,RabB,RabC,RabD,RabE,solLRecy)
+# n<-length(dataframepromedio1SatCsolL$RabA)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromedio1SatCsolL$ticks<-ticks
+# d1<-melt(dataframepromedio1SatCsolL,id.vars="ticks")
+#  
+# solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solL") +scale_color_manual(values = c("RabA" = "blue", "RabB" = "skyblue2","RabC"="green4","RabD"="red","RabE"="yellow","solLRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+#   theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))#+scale_y_continuous(limits = c(0, 250000))
+# solLGrafDPromedio
+# ggsave("solLGrafDPromedio1Sat.png",plot = solLGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+# solSRecy<-rowMeans(VesicularT0Data[,c("solS","solS1","solS2")])
+# 
+# solSRabA<-rowMeans(VesicularT0Data[,c("solSRabA","solSRabA1","solSRabA2")])
+# solSRabB<-rowMeans(VesicularT0Data[,c("solSRabB","solSRabB1","solSRabB2")])
+# solSRabC<-rowMeans(VesicularT0Data[,c("solSRabC","solSRabC1","solSRabC2")])
+# solSRabD<-rowMeans(VesicularT0Data[,c("solSRabD","solSRabD1","solSRabD2")])
+# solSRabE<-rowMeans(VesicularT0Data[,c("solSRabE","solSRabE1","solSRabE2")])
+# dataframepromM0CsolS<-data_frame(solSRabA,solSRabD,solSRabC,solSRabB,solSRabE,solSRecy)
+# n<-length(dataframepromM0CsolS$solSRabA)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromM0CsolS$ticks<-ticks
+# dsolS<-melt(dataframepromM0CsolS,id.vars="ticks")
+# solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solS") +scale_color_manual(values = c("solSRabA" = "blue", "solSRabB" = "skyblue2","solSRabC"="green4","solSRabD"="red","solSRabE"="yellow","solSRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+#   theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 250000))
+# solSGraf
+# ggsave("solSGraf0.png",plot = solSGraf, width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+# solSRecy<-rowMeans(VesicularT0.5Data[,c("solS","solS1","solS2")])
+# 
+# solSRabA<-rowMeans(VesicularT0.5Data[,c("solSRabA","solSRabA1","solSRabA2")])
+# solSRabB<-rowMeans(VesicularT0.5Data[,c("solSRabB","solSRabB1","solSRabB2")])
+# solSRabC<-rowMeans(VesicularT0.5Data[,c("solSRabC","solSRabC1","solSRabC2")])
+# solSRabD<-rowMeans(VesicularT0.5Data[,c("solSRabD","solSRabD1","solSRabD2")])
+# solSRabE<-rowMeans(VesicularT0.5Data[,c("solSRabE","solSRabE1","solSRabE2")])
+# dataframepromM0.5CsolS<-data_frame(solSRabA,solSRabD,solSRabC,solSRabB,solSRabE,solSRecy)
+# n<-length(dataframepromM0.5CsolS$solSRabA)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromM0.5CsolS$ticks<-ticks
+# dsolS<-melt(dataframepromM0.5CsolS,id.vars="ticks")
+# solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solS") +scale_color_manual(values = c("solSRabA" = "blue", "solSRabB" = "skyblue2","solSRabC"="green4","solSRabD"="red","solSRabE"="yellow","solSRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+#   theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 250000))
+# solSGraf
+# ggsave("solSGraf0.5.png",plot = solSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(VesicularT1Data[,c("solS","solS1","solS2")])
+C1<-rowMeans(VesicularT1Data[,c("solSRabA","solSRabA1","solSRabA2")])
+C2<-rowMeans(VesicularT1Data[,c("solSRabB","solSRabB1","solSRabB2")])
+C3<-rowMeans(VesicularT1Data[,c("solSRabC","solSRabC1","solSRabC2")])
+C4<-rowMeans(VesicularT1Data[,c("solSRabD","solSRabD1","solSRabD2")])
+C5<-rowMeans(VesicularT1Data[,c("solSRabE","solSRabE1","solSRabE2")])
+dataframepromM1CsolS<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM1CsolS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM1CsolS$ticks<-ticks
+dsolS<-melt(dataframepromM1CsolS,id.vars="ticks")
+solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(axis.text = element_blank())+ylim(0,2)
+solSGraf
+ggsave("solSGraf1.png",plot = solSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+# solSRecy<-rowMeans(VesicularT1SatData[,c("solS","solS1","solS2")])
+# 
+# solSRabA<-rowMeans(VesicularT1SatData[,c("solSRabA","solSRabA1","solSRabA2")])
+# solSRabB<-rowMeans(VesicularT1SatData[,c("solSRabB","solSRabB1","solSRabB2")])
+# solSRabC<-rowMeans(VesicularT1SatData[,c("solSRabC","solSRabC1","solSRabC2")])
+# solSRabD<-rowMeans(VesicularT1SatData[,c("solSRabD","solSRabD1","solSRabD2")])
+# solSRabE<-rowMeans(VesicularT1SatData[,c("solSRabE","solSRabE1","solSRabE2")])
+# dataframepromM1SatCsolS<-data_frame(solSRabA,solSRabD,solSRabC,solSRabB,solSRabE,solSRecy)
+# n<-length(dataframepromM1SatCsolS$solSRabA)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromM1SatCsolS$ticks<-ticks
+# dsolS<-melt(dataframepromM1SatCsolS,id.vars="ticks")
+# solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="solS") +scale_color_manual(values = c("solSRabA" = "blue", "solSRabB" = "skyblue2","solSRabC"="green4","solSRabD"="red","solSRabE"="yellow","solSRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+#   theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))#+scale_y_continuous(limits = c(0, 250000))
+# solSGraf
+# ggsave("solSGraf1Sat.png",plot = solSGraf, width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(VesicularT0Data[,c("memGolgiMedial","memGolgiMedial1","memGolgiMedial2")])
+C1<-rowMeans(VesicularT0Data[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2")])
+C2<-rowMeans(VesicularT0Data[,c("memGolgiMedialRabB","memGolgiMedialRabB1","memGolgiMedialRabB2")])
+C3<-rowMeans(VesicularT0Data[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2")])
+C4<-rowMeans(VesicularT0Data[,c("memGolgiMedialRabD","memGolgiMedialRabD1","memGolgiMedialRabD2")])
+C5<-rowMeans(VesicularT0Data[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2")])
+dataframepromM0CmemGolgiMedial<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0CmemGolgiMedial$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0CmemGolgiMedial$ticks<-ticks
+dmemGolgiMedial<-melt(dataframepromM0CmemGolgiMedial,id.vars="ticks")
+memGolgiMedialGraf<-ggplot(dmemGolgiMedial,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(axis.text = element_blank())+ylim(0,2)
+memGolgiMedialGraf
+ggsave("memGolgiMedialGraf0.png",plot = memGolgiMedialGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(VesicularT1Data[,c("memGolgiMedial","memGolgiMedial1","memGolgiMedial2")])
+C1<-rowMeans(VesicularT1Data[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2")])
+C2<-rowMeans(VesicularT1Data[,c("memGolgiMedialRabB","memGolgiMedialRabB1","memGolgiMedialRabB2")])
+C3<-rowMeans(VesicularT1Data[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2")])
+C4<-rowMeans(VesicularT1Data[,c("memGolgiMedialRabD","memGolgiMedialRabD1","memGolgiMedialRabD2")])
+C5<-rowMeans(VesicularT1Data[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2")])
+dataframepromM1CmemGolgiMedial<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM1CmemGolgiMedial$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM1CmemGolgiMedial$ticks<-ticks
+dmemGolgiMedial<-melt(dataframepromM1CmemGolgiMedial,id.vars="ticks")
+memGolgiMedialGraf<-ggplot(dmemGolgiMedial,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(axis.text = element_blank())+ylim(0,2)
+memGolgiMedialGraf
+ggsave("memGolgiMedialGraf1.png",plot = memGolgiMedialGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+# memTubRecy<-rowMeans(VesicularT0.5Data[,c("memTub","memTub1","memTub2")])
+# memTubRabA<-rowMeans(VesicularT0.5Data[,c("memTubRabA","memTubRabA1","memTubRabA2")])
+# memTubRabB<-rowMeans(VesicularT0.5Data[,c("memTubRabB","memTubRabB1","memTubRabB2")])
+# memTubRabC<-rowMeans(VesicularT0.5Data[,c("memTubRabC","memTubRabC1","memTubRabC2")])
+# memTubRabD<-rowMeans(VesicularT0.5Data[,c("memTubRabD","memTubRabD1","memTubRabD2")])
+# memTubRabE<-rowMeans(VesicularT0.5Data[,c("memTubRabE","memTubRabE1","memTubRabE2")])
+# dataframepromM0.5CmemTub<-data.frame(memTubRabA,memTubRabD,memTubRabC,memTubRabB,memTubRabE,memTubRecy)
+# n<-length(dataframepromM0.5CmemTub$memTubRabA)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromM0.5CmemTub$ticks<-ticks
+# dmemTub<-melt(dataframepromM0.5CmemTub,id.vars="ticks")
+# memTubGraf<-ggplot(dmemTub,aes(x=ticks,y=value,color=variable))+geom_point()+geom_line()+labs(x="Ticks",y="memTub") +scale_color_manual(values = c("memTubRabA" = "blue", "memTubRabB" = "skyblue2","memTubRabC"="green4","memTubRabD"="red","memTubRabE"="yellow","memTubRecy"="grey1"))+theme_classic()+theme(text=element_text(size = 17))+ theme(legend.position="right") +
+#   theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+scale_y_continuous(limits = c(0, 20000))
+# 
+# memTubGraf
+# ggsave("memTubGraf0.5.png",plot = memTubGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(VesicularT1Data[,c("memTub","memTub1","memTub2")])
+C1<-rowMeans(VesicularT1Data[,c("memTubRabA","memTubRabA1","memTubRabA2")])
+  C2<-rowMeans(VesicularT1Data[,c("memTubRabB","memTubRabB1","memTubRabB2")])
+C3<-rowMeans(VesicularT1Data[,c("memTubRabC","memTubRabC1","memTubRabC2")])
+C4<-rowMeans(VesicularT1Data[,c("memTubRabD","memTubRabD1","memTubRabD2")])
+C5<-rowMeans(VesicularT1Data[,c("memTubRabE","memTubRabE1","memTubRabE2")])
+dataframepromM1CmemTub<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM1CmemTub$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM1CmemTub$ticks<-ticks
+dmemTub<-melt(dataframepromM1CmemTub,id.vars="ticks")
+memTubGraf<-ggplot(dmemTub,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(axis.text = element_blank())+ylim(0,2)
+memTubGraf
+ggsave("memTubGraf1.png",plot = memTubGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(VesicularT1SatData[,c("memGolgiMedial","memGolgiMedial1","memGolgiMedial2")])
+C1<-rowMeans(VesicularT1SatData[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2")])
+C2<-rowMeans(VesicularT1SatData[,c("memGolgiMedialRabB","memGolgiMedialRabB1","memGolgiMedialRabB2")])
+C3<-rowMeans(VesicularT1SatData[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2")])
+C4<-rowMeans(VesicularT1SatData[,c("memGolgiMedialRabD","memGolgiMedialRabD1","memGolgiMedialRabD2")])
+C5<-rowMeans(VesicularT1SatData[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2")])
+dataframepromM1SatCmemGolgiMedial<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+#View(dataframepromM1SatCmemGolgiMedial)
+n<-length(dataframepromM1SatCmemGolgiMedial$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM1SatCmemGolgiMedial$ticks<-ticks
+dmemGolgiMedial<-melt(dataframepromM1SatCmemGolgiMedial,id.vars="ticks")
+memGolgiMedialGraf<-ggplot(dmemGolgiMedial,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(axis.text = element_blank())+ylim(0,2)
+memGolgiMedialGraf
+ggsave("memGolgiMedialGraf1Sat.png",plot = memGolgiMedialGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+
+
+

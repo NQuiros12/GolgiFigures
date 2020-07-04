@@ -1,0 +1,585 @@
+---
+title: "Maturation6cisterns"
+author: "Nicolas"
+date: "23/1/2020"
+output: pdf_document
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(lubridate)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(rmarkdown)
+library(mosaicData)
+library(stringr)
+library(htmlwidgets)
+library(ggthemes)
+library(pander)
+library(xtable)
+library(reshape2)
+library(scales)
+library(abind)
+library(data.table)
+library(knitr)
+library(broom)
+```
+ 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns0.1Areanames<-c('/home/user/Desktop/Pasantia/Maturation/0.1/cisternsArea.csv','/home/user/Desktop/Pasantia/Maturation/0.1/cisternsArea (2).csv','/home/user/Desktop/Pasantia/Maturation/0.1/cisternsArea (3).csv')
+
+Maturation0.1CisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0.1Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0.1Areanames[i],header=TRUE,sep=",")
+  Maturation0.1CisternAreaData<-bind_cols(Maturation0.1CisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.1CisternAreaData<-(SubjectDataM<-read.csv(Cisterns0.1Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation0.1CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/0.1cisternas/Maturation0.1CisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns0.01Areanames<-c('/home/user/Desktop/Pasantia/Maturation/0.01/cisternsArea.csv','/home/user/Desktop/Pasantia/Maturation/0.01/cisternsArea (2).csv','/home/user/Desktop/Pasantia/Maturation/0.01/cisternsArea (3).csv')
+
+Maturation0.01CisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0.01Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0.01Areanames[i],header=TRUE,sep=",")
+  Maturation0.01CisternAreaData<-bind_cols(Maturation0.01CisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.01CisternAreaData<-(SubjectDataM<-read.csv(Cisterns0.01Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation0.01CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/0.01cisternas/Maturation0.01CisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns0.01SatAreanames<-c('/home/user/Desktop/Pasantia/Maturation/0.01Sat/cisternsArea.csv','/home/user/Desktop/Pasantia/Maturation/0.01Sat/cisternsArea (2).csv','/home/user/Desktop/Pasantia/Maturation/0.01Sat/cisternsArea (3).csv')
+
+Maturation0.01SatCisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0.01SatAreanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0.01SatAreanames[i],header=TRUE,sep=",")
+  Maturation0.01SatCisternAreaData<-bind_cols(Maturation0.01SatCisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.01SatCisternAreaData<-(SubjectDataM<-read.csv(Cisterns0.01SatAreanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation0.01SatCisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/0.01Satcisternas/Maturation0.01SatCisternAreaData',row.names = T)
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+Cisterns0.002Areanames<-c('/home/user/Desktop/Pasantia/Maturation/0.002/cisternsArea.csv','/home/user/Desktop/Pasantia/Maturation/0.002/cisternsArea (2).csv','/home/user/Desktop/Pasantia/Maturation/0.002/cisternsArea (3).csv')
+
+Maturation0.002CisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Cisterns0.002Areanames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(Cisterns0.002Areanames[i],header=TRUE,sep=",")
+  Maturation0.002CisternAreaData<-bind_cols(Maturation0.002CisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.002CisternAreaData<-(SubjectDataM<-read.csv(Cisterns0.002Areanames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation0.002CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/0.002cisternas/Maturation0.002CisternAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+M0.1names<-c('/home/user/Desktop/Pasantia/Maturation/0.1/ResultsIntrTransp3.csv','/home/user/Desktop/Pasantia/Maturation/0.1/ResultsIntrTransp3 (2).csv','/home/user/Desktop/Pasantia/Maturation/0.1/ResultsIntrTransp3 (3).csv')
+Maturation0.1Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(M0.1names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(M0.1names[i],header=TRUE,sep=",")
+  Maturation0.1Data<-bind_cols(Maturation0.1Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.1Data<-(SubjectDataM<-read.table(M0.1names[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+M0.01names<-c('/home/user/Desktop/Pasantia/Maturation/0.01/ResultsIntrTransp3.csv','/home/user/Desktop/Pasantia/Maturation/0.01/ResultsIntrTransp3 (2).csv','/home/user/Desktop/Pasantia/Maturation/0.01/ResultsIntrTransp3 (3).csv')
+Maturation0.01Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(M0.01names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(M0.01names[i],header=TRUE,sep=",")
+  Maturation0.01Data<-bind_cols(Maturation0.01Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.01Data<-(SubjectDataM<-read.table(M0.01names[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+M0.01Satnames<-c('/home/user/Desktop/Pasantia/Maturation/0.01Sat/ResultsIntrTransp3.csv','/home/user/Desktop/Pasantia/Maturation/0.01Sat/ResultsIntrTransp3 (2).csv','/home/user/Desktop/Pasantia/Maturation/0.01Sat/ResultsIntrTransp3 (3).csv')
+Maturation0.01SatData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(M0.01Satnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(M0.01Satnames[i],header=TRUE,sep=",")
+  Maturation0.01SatData<-bind_cols(Maturation0.01SatData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.01SatData<-(SubjectDataM<-read.table(M0.01Satnames[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+M0.002names<-c('/home/user/Desktop/Pasantia/Maturation/0.002/ResultsIntrTransp3.csv','/home/user/Desktop/Pasantia/Maturation/0.002/ResultsIntrTransp3 (2).csv','/home/user/Desktop/Pasantia/Maturation/0.002/ResultsIntrTransp3 (3).csv')
+Maturation0.002Data<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(M0.002names)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(M0.002names[i],header=TRUE,sep=",")
+  Maturation0.002Data<-bind_cols(Maturation0.002Data,SubjectDataM)
+  
+  
+  }
+  else if (i==1){Maturation0.002Data<-(SubjectDataM<-read.table(M0.002names[i],header=TRUE,sep=","))
+ }}
+#write.csv(Maturation5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/Maturation5Data',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.1/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.1/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.1/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/Maturation/0.1/MaturationTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.01/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.01/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.01/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/Maturation/0.01/MaturationTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.002/ResultsIntrTransp3.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.002/ResultsIntrTransp3 (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.002/ResultsIntrTransp3 (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/Maturation/0.002/MaturationTransportCargo',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.1/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.1/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.1/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/Maturation/0.1/MaturationAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.01/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.01/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.01/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/Maturation/0.01/MaturationAreaData',row.names = T)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m1<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.002/cisternsArea.csv',header=TRUE,sep=",")
+m2<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.002/cisternsArea (2).csv',header=TRUE,sep=",")
+m3<-read.csv('/home/user/Desktop/Pasantia/Maturation/0.002/cisternsArea (3).csv',header=TRUE,sep=",")
+m1matrix<-as.matrix(m1,na.rm=T)
+m2matrix<-as.matrix(m2)
+m3matrix<-as.matrix(m3)
+meanmatrix<-(m1matrix+m2matrix+m3matrix)/3
+write.csv(meanmatrix,'/home/user/Desktop/Pasantia/Maturation/0.002/MaturationAreaData',row.names = T)
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(Maturation0.1CisternAreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(Maturation0.1CisternAreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(Maturation0.1CisternAreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(Maturation0.1CisternAreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(Maturation0.1CisternAreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioM0.1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+
+n<-length(dataframepromedioM0.1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =5 ))+theme(axis.title = element_text(size = 5))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio0.1.png",plot = CisternAreaGrafPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(Maturation0.01CisternAreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(Maturation0.01CisternAreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(Maturation0.01CisternAreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(Maturation0.01CisternAreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(Maturation0.01CisternAreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioM0.01CisternArea<-data.frame(C5,C4,C3,C2,C1)
+#View(dataframepromedioM0.01CisternArea)
+n<-length(dataframepromedioM0.01CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.01CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.01CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =5 ))+theme(axis.title = element_text(size = 5))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio0.01.png",plot = CisternAreaGrafPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(Maturation0.002CisternAreaData[,c("RabB","RabB1","RabB2")])
+C3<-rowMeans(Maturation0.002CisternAreaData[,c("RabC","RabC1","RabC2")])
+C4<-rowMeans(Maturation0.002CisternAreaData[,c("RabD","RabD1","RabD2")])
+C5<-rowMeans(Maturation0.002CisternAreaData[,c("RabE","RabE1","RabE2")])
+C1<-rowMeans(Maturation0.002CisternAreaData[,c("RabA","RabA1","RabA2")])
+
+dataframepromedioM0.002CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioM0.002CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.002CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.002CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(title='',x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =5 ))+theme(axis.title = element_text(size = 5))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))
+CisternAreaGrafPromedio
+ggsave("CisternAreaGrafPromedio0.002.png",plot = CisternAreaGrafPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+cisterns<-rowMeans(Maturation0.1CisternAreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+vesicles<-rowMeans(Maturation0.1CisternAreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioM0.1CisternArea<-data.frame(vesicles,cisterns)
+
+n<-length(dataframepromedioM0.1CisternArea$vesicles)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.1CisternArea,id.vars="ticks")
+CisternvesiclesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) + geom_point(size=12)+labs(x="",y="")+ scale_color_manual(values = c("vesicles" = "orange2","cisterns"="chocolate4"))+theme_classic()+ theme(legend.position="none") +theme(axis.text = element_blank())+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(legend.text = element_text(size =15 ))+theme(axis.title = element_text(size = 15))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+CisternvesiclesPromedio
+ggsave("CisternvesiclesPromedio0.1.png",plot = CisternvesiclesPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+cisterns<-rowMeans(Maturation0.01CisternAreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+vesicles<-rowMeans(Maturation0.01CisternAreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioM0.01CisternArea<-data.frame(vesicles,cisterns)
+
+n<-length(dataframepromedioM0.01CisternArea$vesicles)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.01CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.01CisternArea,id.vars="ticks")
+CisternvesiclesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) + geom_point(size=12)+labs(x="",y="")+ scale_color_manual(values = c("vesicles" = "orange2","cisterns"="chocolate4"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(axis.title = element_text(size = 15))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+CisternvesiclesPromedio
+ggsave("CisternvesiclesPromedio0.01.png",plot = CisternvesiclesPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+cisterns<-rowMeans(Maturation0.002CisternAreaData[,c("X.cisterns.","X.cisterns.1","X.cisterns.2")])
+vesicles<-rowMeans(Maturation0.002CisternAreaData[,c("X.vesicles.","X.vesicles.1","X.vesicles.2")])
+
+dataframepromedioM0.002CisternArea<-data.frame(vesicles,cisterns)
+
+n<-length(dataframepromedioM0.002CisternArea$vesicles)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.002CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioM0.002CisternArea,id.vars="ticks")
+CisternvesiclesPromedio<-ggplot(d1, aes(x=ticks, y=value, color=variable)) + geom_point(size=12)+labs(x="",y="")+ scale_color_manual(values = c("vesicles" = "orange2","cisterns"="chocolate4"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text =element_blank())+theme(legend.text = element_text(size =15 ))+theme(axis.title = element_text(size = 15))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+CisternvesiclesPromedio
+ggsave("CisternvesiclesPromedio0.002.png",plot = CisternvesiclesPromedio, width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(Maturation0.1CisternAreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(Maturation0.1CisternAreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+
+
+dataframepromedioM0.1Entropy<-data.frame(Entropy,IndEntropy)
+names(dataframepromedioM0.1Entropy)[names(dataframepromedioM0.1Entropy) == "Entropy"] <- "intra-cisterna entropy"
+names(dataframepromedioM0.1Entropy)[names(dataframepromedioM0.1Entropy) == "IndEntropy"] <- "inter-cisternae entropy"
+#head(dataframepromedioM0.01Entropy)
+n<-length(dataframepromedioM0.1Entropy$`intra-cisterna entropy`)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.1Entropy$ticks<-ticks
+d1<-melt(dataframepromedioM0.1Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+labs(x="",y="")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="none") +
+theme(legend.title=element_blank())+ scale_color_manual(values = c("inter-cisternae entropy" = "khaki4","intra-cisterna entropy"="khaki3"))+guides(colour=guide_legend(override.aes = list(size = 25)))+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+ theme(legend.key.size = unit(6, "cm"))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio0.1.png",plot = EntropyGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(Maturation0.01CisternAreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(Maturation0.01CisternAreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+
+
+dataframepromedioM0.01Entropy<-data.frame(Entropy,IndEntropy)
+names(dataframepromedioM0.01Entropy)[names(dataframepromedioM0.01Entropy) == "Entropy"] <- "intra-cisterna entropy"
+names(dataframepromedioM0.01Entropy)[names(dataframepromedioM0.01Entropy) == "IndEntropy"] <- "inter-cisternae entropy"
+#head(dataframepromedioM0.01Entropy)
+n<-length(dataframepromedioM0.01Entropy$`intra-cisterna entropy`)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.01Entropy$ticks<-ticks
+d1<-melt(dataframepromedioM0.01Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+labs(title='',x="",y="")+ theme_bw() +theme(axis.line = element_line(colour = "black"))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="none") +
+theme(legend.title=element_blank())+ scale_color_manual(values = c("inter-cisternae entropy" = "khaki4","intra-cisterna entropy"="khaki3"))+guides(colour=guide_legend(override.aes = list(size = 25)))+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+ theme(legend.key.size = unit(6, "cm"))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+EntropyGrafDPromedio 
+ggsave("EntropyGrafDPromedio0.01.png",plot = EntropyGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Separador
+Entropy<-rowMeans(Maturation0.002CisternAreaData[,c("entropy","entropy1","entropy2")])
+IndEntropy<-rowMeans(Maturation0.002CisternAreaData[,c("entropyInd","entropyInd1","entropyInd2")])
+
+
+dataframepromedioM0.002Entropy<-data.frame(Entropy,IndEntropy)
+names(dataframepromedioM0.002Entropy)[names(dataframepromedioM0.002Entropy) == "Entropy"] <- "intra-cisterna entropy"
+names(dataframepromedioM0.002Entropy)[names(dataframepromedioM0.002Entropy) == "IndEntropy"] <- "inter-cisternae entropy"
+#head(dataframepromedioM0.01Entropy)
+n<-length(dataframepromedioM0.002Entropy$`intra-cisterna entropy`)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioM0.002Entropy$ticks<-ticks
+d1<-melt(dataframepromedioM0.002Entropy,id.vars="ticks")
+EntropyGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+labs(x="",y="")+ scale_color_manual(values = c("inter-cisternae entropy" = "khaki3","intra-cisterna entropy"="khaki4"))+guides(colour=guide_legend(override.aes = list(size = 25)))+theme_classic()+theme(text=element_text(size = 15))+ theme(legend.position="none") +
+theme(legend.title=element_blank())+ scale_color_manual(values = c("intra-cisterna entropy" = "khaki3","inter-cisternae entropy"="khaki4"))+guides(colour=guide_legend(override.aes = list(size = 25)))+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+ theme(legend.key.size = unit(6, "cm"))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))
+
+EntropyGrafDPromedio
+ggsave("EntropyGrafDPromedio0.002.png",plot = EntropyGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.1Data[,c("solL","solL1","solL2")])
+C1<-rowMeans(Maturation0.1Data[,c("solLRabA","solLRabA1","solLRabA2")])
+C2<-rowMeans(Maturation0.1Data[,c("solLRabB","solLRabB1","solLRabB2")])
+C3<-rowMeans(Maturation0.1Data[,c("solLRabC","solLRabC1","solLRabC2")])
+C4<-rowMeans(Maturation0.1Data[,c("solLRabD","solLRabD1","solLRabD2")])
+C5<-rowMeans(Maturation0.1Data[,c("solLRabE","solLRabE1","solLRabE2")])
+dataframepromedio0.1CsolL<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromedio0.1CsolL$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedio0.1CsolL$ticks<-ticks
+d1<-melt(dataframepromedio0.1CsolL,id.vars="ticks")
+ 
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+ylim(0, 2)
+solLGrafDPromedio
+ggsave("solLGrafDPromedio0.1.png",plot = solLGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.01Data[,c("solL","solL1","solL2")])
+C1<-rowMeans(Maturation0.01Data[,c("solLRabA","solLRabA1","solLRabA2")])
+C2<-rowMeans(Maturation0.01Data[,c("solLRabB","solLRabB1","solLRabB2")])
+C3<-rowMeans(Maturation0.01Data[,c("solLRabC","solLRabC1","solLRabC2")])
+C4<-rowMeans(Maturation0.01Data[,c("solLRabD","solLRabD1","solLRabD2")])
+C5<-rowMeans(Maturation0.01Data[,c("solLRabE","solLRabE1","solLRabE2")])
+dataframepromedio0.01CsolL<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromedio0.01CsolL$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedio0.01CsolL$ticks<-ticks
+d1<-melt(dataframepromedio0.01CsolL,id.vars="ticks")
+ 
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+ylim(0, 2)
+solLGrafDPromedio
+ggsave("solLGrafDPromedio0.01.png",plot = solLGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.002Data[,c("solL","solL1","solL2")])
+C1<-rowMeans(Maturation0.002Data[,c("solLRabA","solLRabA1","solLRabA2")])
+C2<-rowMeans(Maturation0.002Data[,c("solLRabB","solLRabB1","solLRabB2")])
+C3<-rowMeans(Maturation0.002Data[,c("solLRabC","solLRabC1","solLRabC2")])
+C4<-rowMeans(Maturation0.002Data[,c("solLRabD","solLRabD1","solLRabD2")])
+C5<-rowMeans(Maturation0.002Data[,c("solLRabE","solLRabE1","solLRabE2")])
+dataframepromedio0.002CsolL<-data.frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromedio0.002CsolL$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedio0.002CsolL$ticks<-ticks
+d1<-melt(dataframepromedio0.002CsolL,id.vars="ticks")
+ 
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+ylim(0, 2)
+solLGrafDPromedio
+ggsave("solLGrafDPromedio0.002.png",plot = solLGrafDPromedio , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.01Data[,c("solS","solS1","solS2")])
+
+C1<-rowMeans(Maturation0.01Data[,c("solSRabA","solSRabA1","solSRabA2")])
+C2<-rowMeans(Maturation0.01Data[,c("solSRabB","solSRabB1","solSRabB2")])
+C3<-rowMeans(Maturation0.01Data[,c("solSRabC","solSRabC1","solSRabC2")])
+C4<-rowMeans(Maturation0.01Data[,c("solSRabD","solSRabD1","solSRabD2")])
+C5<-rowMeans(Maturation0.01Data[,c("solSRabE","solSRabE1","solSRabE2")])
+dataframepromM0.01CsolS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.01CsolS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.01CsolS$ticks<-ticks
+dsolS<-melt(dataframepromM0.01CsolS,id.vars="ticks")
+solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5, "cm"))+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+ylim(0, 2)
+solSGraf
+ggsave("solSPromedio0.01.png",plot = solSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+# PostGolgi<-rowMeans(Maturation0.002Data[,c("solS","solS1","solS2")])
+# C1<-rowMeans(Maturation0.002Data[,c("solSRabA","solSRabA1","solSRabA2")])
+# C2<-rowMeans(Maturation0.002Data[,c("solSRabB","solSRabB1","solSRabB2")])
+# C3<-rowMeans(Maturation0.002Data[,c("solSRabC","solSRabC1","solSRabC2")])
+# C4<-rowMeans(Maturation0.002Data[,c("solSRabD","solSRabD1","solSRabD2")])
+# C5<-rowMeans(Maturation0.002Data[,c("solSRabE","solSRabE1","solSRabE2")])
+# dataframepromM0.002CsolS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+# n<-length(dataframepromM0.002CsolS$C1)*100
+# ticks<-seq(100,n,by=100)
+# dataframepromM0.002CsolS$ticks<-ticks
+# dsolS<-melt(dataframepromM0.002CsolS,id.vars="ticks")
+# solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" ="skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5,"cm"))+theme(axis.ticks.margin=unit(0.5,"cm"))+
+#   scale_x_continuous(breaks =c(0,15000,30000,45000,60000))+ylim(0, 2)
+# solSGraf
+# ggsave("solSPromedio0.002.png",plot = solSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.1Data[,c("solS","solS1","solS2")])
+C1<-rowMeans(Maturation0.1Data[,c("solSRabA","solSRabA1","solSRabA2")])
+C2<-rowMeans(Maturation0.1Data[,c("solSRabB","solSRabB1","solSRabB2")])
+C3<-rowMeans(Maturation0.1Data[,c("solSRabC","solSRabC1","solSRabC2")])
+C4<-rowMeans(Maturation0.1Data[,c("solSRabD","solSRabD1","solSRabD2")])
+C5<-rowMeans(Maturation0.1Data[,c("solSRabE","solSRabE1","solSRabE2")])
+dataframepromM0.1CsolS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CsolS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CsolS$ticks<-ticks
+dsolS<-melt(dataframepromM0.1CsolS,id.vars="ticks")
+solSGraf<-ggplot(dsolS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" ="skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5,"cm"))+theme(axis.ticks.margin=unit(0.5,"cm"))+
+  scale_x_continuous(breaks =c(0,15000,30000,45000,60000))+ylim(0, 2)
+solSGraf
+ggsave("solSPromedio0.1.png",plot = solSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.1Data[,c("memLS","memLS1","memLS2")])
+
+C1<-rowMeans(Maturation0.1Data[,c("memLSRabA","memLSRabA1","memLSRabA2")])
+C2<-rowMeans(Maturation0.1Data[,c("memLSRabB","memLSRabB1","memLSRabB2")])
+C3<-rowMeans(Maturation0.1Data[,c("memLSRabC","memLSRabC1","memLSRabC2")])
+C4<-rowMeans(Maturation0.1Data[,c("memLSRabD","memLSRabD1","memLSRabD2")])
+C5<-rowMeans(Maturation0.1Data[,c("memLSRabE","memLSRabE1","memLSRabE2")])
+dataframepromM0.1CmemLS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.1CmemLS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.1CmemLS$ticks<-ticks
+dmemLS<-melt(dataframepromM0.1CmemLS,id.vars="ticks")
+memLSGraf<-ggplot(dmemLS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5,"cm"))+scale_x_continuous(breaks=c(0,15000,30000,45000,60000))+ylim(0, 2)
+memLSGraf
+ggsave("memLSGraf0.1.png",plot = memLSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.01Data[,c("memLS","memLS1","memLS2")])
+C1<-rowMeans(Maturation0.01Data[,c("memLSRabA","memLSRabA1","memLSRabA2")])
+C2<-rowMeans(Maturation0.01Data[,c("memLSRabB","memLSRabB1","memLSRabB2")])
+C3<-rowMeans(Maturation0.01Data[,c("memLSRabC","memLSRabC1","memLSRabC2")])
+C4<-rowMeans(Maturation0.01Data[,c("memLSRabD","memLSRabD1","memLSRabD2")])
+C5<-rowMeans(Maturation0.01Data[,c("memLSRabE","memLSRabE1","memLSRabE2")])
+dataframepromM0.01CmemLS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.01CmemLS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.01CmemLS$ticks<-ticks
+dmemLS<-melt(dataframepromM0.01CmemLS,id.vars="ticks")
+memLSGraf<-ggplot(dmemLS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="Ticks",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5,"cm"))+scale_x_continuous(breaks=c(0,15000,30000,45000,60000))+ylim(0, 2)
+memLSGraf
+ggsave("memLSGraf0.01.png",plot = memLSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.01SatData[,c("memLS","memLS1","memLS2")])
+C1<-rowMeans(Maturation0.01SatData[,c("memLSRabA","memLSRabA1","memLSRabA2")])
+C2<-rowMeans(Maturation0.01SatData[,c("memLSRabB","memLSRabB1","memLSRabB2")])
+C3<-rowMeans(Maturation0.01SatData[,c("memLSRabC","memLSRabC1","memLSRabC2")])
+C4<-rowMeans(Maturation0.01SatData[,c("memLSRabD","memLSRabD1","memLSRabD2")])
+C5<-rowMeans(Maturation0.01SatData[,c("memLSRabE","memLSRabE1","memLSRabE2")])
+dataframepromM0.01SatCmemLS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.01SatCmemLS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.01SatCmemLS$ticks<-ticks
+dmemLS<-melt(dataframepromM0.01SatCmemLS,id.vars="ticks")
+memLSGraf<-ggplot(dmemLS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="Ticks",y="") +scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +
+  theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5,"cm"))+scale_x_continuous(breaks=c(0,15000,30000,45000,60000))+ylim(0, 2)
+memLSGraf
+ggsave("memLSGraf0.01Sat.png",plot = memLSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+PostGolgi<-rowMeans(Maturation0.002Data[,c("memLS","memLS1","memLS2")])
+C1<-rowMeans(Maturation0.002Data[,c("memLSRabA","memLSRabA1","memLSRabA2")])
+C2<-rowMeans(Maturation0.002Data[,c("memLSRabB","memLSRabB1","memLSRabB2")])
+C3<-rowMeans(Maturation0.002Data[,c("memLSRabC","memLSRabC1","memLSRabC2")])
+C4<-rowMeans(Maturation0.002Data[,c("memLSRabD","memLSRabD1","memLSRabD2")])
+C5<-rowMeans(Maturation0.002Data[,c("memLSRabE","memLSRabE1","memLSRabE2")])
+dataframepromM0.002CmemLS<-data_frame(C1,C2,C3,C4,C5,PostGolgi)
+n<-length(dataframepromM0.002CmemLS$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromM0.002CmemLS$ticks<-ticks
+dmemLS<-melt(dataframepromM0.002CmemLS,id.vars="ticks")
+memLSGraf<-ggplot(dmemLS,aes(x=ticks,y=value,color=variable))+geom_point(size=12)+geom_line(size=5)+labs(x="",y="")+scale_color_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow","PostGolgi"="grey1"))+theme_classic()+theme(text=element_text(size = 30))+ theme(legend.position="none") +theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.5))+theme(axis.title.x = element_text(vjust=1))+theme(axis.title.y = element_text(vjust=2.2))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =15 ))+theme(legend.text = element_text(size = 50))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))+theme( axis.ticks.length=unit(0.5, "cm"))+theme(axis.ticks.margin=unit(0.5,"cm"))+scale_x_continuous(breaks=c(0,15000,30000,45000,60000))+ylim(0, 2)
+memLSGraf
+
+ggsave("memLSGraf0.002.png",plot = memLSGraf , width = 26, height = 20, dpi = 150, units = "in", device='png')
+
+```
