@@ -1,0 +1,783 @@
+---
+title: "supp_figures_unstable"
+author: "Nico"
+date: "7/22/2020"
+output: pdf_document
+---
+```{r Librerias,echo=FALSE, message=FALSE, warning=FALSE}
+library(lubridate)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(rmarkdown)
+library(mosaicData)
+library(stringr)
+library(htmlwidgets)
+library(ggthemes)
+library(pander)
+library(xtable)
+library(reshape2)
+library(scales)
+library(abind)
+library(data.table)
+library(knitr)
+library(broom)
+```
+
+
+Arme los datos de la siguiente manera
+En general los nombres de data frame arrancan con el nombre del modelo, despues dicen cual es el experimento y finalmente aclaran si se trata de datos estructurales (area y entropia shanon) o datos de concentraciones (data).
+Por ejemplo:
+**VesicularT0CisternAreaData**
+
+
+$\bullet$ Los datos frames que terminan con AreaData son datos de cisternArea.csv
+$\bullet$ Los datos frames que terminan con Data son datos ResultsIntrTransp3.csv
+$\bullet$ Luego armamos matrices con los datos, esto aun no esta automatizado para tomar todos los .csv's que haya en una carpeta.
+*Datos de banderas*
+```{r Vesicular Transport eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+#Sin fusion homotipica
+CisternsAreaNames <-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/vesicular_sinFhomo/", pattern = "cisternsArea*", full.names = T)
+
+VesicularTCisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(CisternsAreaNames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=",")
+  VesicularTCisternAreaData<-bind_cols(VesicularTCisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularTCisternAreaData<-(SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5CisternAreaData',row.names = T)
+#VesicularTFCisternAreaData<-VesicularTCisternAreaData
+```
+
+```{r Maturation eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+#Maturation p=0.1
+CisternsAreaNames <-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Maturation/Resultados-maturation-inestable_-no-saturado-9-7/Resultados maturation inestable, no saturado 9-7/", pattern = "cisternsArea*", full.names = T)
+
+MaturationCisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(CisternsAreaNames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=",")
+  MaturationCisternAreaData<-bind_cols(MaturationCisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){MaturationCisternAreaData<-(SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5CisternAreaData',row.names = T)
+#VesicularTFCisternAreaData<-VesicularTCisternAreaData
+```
+
+```{r Vesicular Transport eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+#Sin fusion homotipica
+CisternsAreaNames <-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Distilation/Resultados-Distillation-inestable_-no-sat-13-7/Resultados Distillation inestable, no sat 13-7/", pattern = "cisternsArea*", full.names = T)
+
+DistilationCisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(CisternsAreaNames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=",")
+  DistilationCisternAreaData<-bind_cols(DistilationCisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){DistilationCisternAreaData<-(SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5CisternAreaData',row.names = T)
+#DistilationFCisternAreaData<-DistilationCisternAreaData
+```
+*Datos de cargos*
+```{r Vesicular Transport echo=FALSE, message=FALSE, warning=FALSE}
+#Fusion Homotipica
+Vnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/vesicular_conFhomo/resultados vesicular 7-7/", pattern = "ResultsIntrTransp3*", full.names = T)
+VesicularTData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Vnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=",")
+  VesicularTData<-bind_cols(VesicularTData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularTData<-(SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=","))
+  }}
+VesicularTFData<-VesicularTData
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r VesicularSinFusionHomotipica echo=FALSE, message=FALSE, warning=FALSE}
+#Sin Fusion Homotipica
+Vnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/vesicular_sinFhomo/", pattern = "ResultsIntrTransp3*", full.names = T)
+VesicularTData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Vnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=",")
+  VesicularTData<-bind_cols(VesicularTData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularTData<-(SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=","))
+  }}
+VesicularTData
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r Vesicular Transport echo=FALSE, message=FALSE, warning=FALSE}
+# Sin Fusion Homotipica
+Vnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/vesicular_sinFhomo/", pattern = "ResultsIntrTransp3*", full.names = T)
+VesicularTData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Vnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=",")
+  VesicularTData<-bind_cols(VesicularTData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularTData<-(SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r Vesicular Saturado Transport echo=FALSE, message=FALSE, warning=FALSE}
+#Fusion Homotipica Sat
+Vnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/vesicular_conFhomo_sat/resultados vesicular 6-7/", pattern = "ResultsIntrTransp3*", full.names = T)
+VesicularTSatData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Vnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=",")
+  VesicularTSatData<-bind_cols(VesicularTSatData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){VesicularTSatData<-(SubjectDataM<-read.table(Vnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+#Maturation estable p=0.002
+CisternsAreaNames <-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Maturation/estable/Resultados-maturation-estable-0.002_-no-saturado-11-7/Resultados maturation 0.002, no saturado 11-7/", pattern = "cisternsArea*", full.names = T)
+
+MaturationCisternAreaData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(CisternsAreaNames)){
+  if(i!=1){ 
+  SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=",")
+  MaturationCisternAreaData<-bind_cols(MaturationCisternAreaData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){MaturationCisternAreaData<-(SubjectDataM<-read.csv(CisternsAreaNames[i],header=TRUE,sep=","))
+ }}
+#write.csv(VesciularT5CisternAreaData,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5CisternAreaData',row.names = T)
+#MaturationFCisternAreaData<-MaturationCisternAreaData
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+#Maturation
+Mnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Maturation/estable/Resultados-maturation-estable-0.002_-no-saturado-11-7/Resultados maturation 0.002, no saturado 11-7/", pattern = "ResultsIntrTransp3*", full.names = T)
+MaturationData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Mnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Mnames[i],header=TRUE,sep=",")
+ MaturationData<-bind_cols(MaturationData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){MaturationData<-(SubjectDataM<-read.table(Mnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r MaturationSatData echo=FALSE, message=FALSE, warning=FALSE}
+#Maturation
+Mnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Maturation/estable/Resultados-maturation-estable_-saturado-9-7/Resultados maturation estable, saturado 9-7/", pattern = "ResultsIntrTransp3*", full.names = T)
+MaturationSatData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Mnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Mnames[i],header=TRUE,sep=",")
+ MaturationSatData<-bind_cols(MaturationSatData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){MaturationSatData<-(SubjectDataM<-read.table(Mnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r MaturationUnstableData echo=FALSE, message=FALSE, warning=FALSE}
+#Maturation
+Mnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Maturation/Resultados-maturation-inestable_-no-saturado-9-7/Resultados maturation inestable, no saturado 9-7/", pattern = "ResultsIntrTransp3*", full.names = T)
+MaturationUnstableData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Mnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Mnames[i],header=TRUE,sep=",")
+ MaturationUnstableData<-bind_cols(MaturationUnstableData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){MaturationUnstableData<-(SubjectDataM<-read.table(Mnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r Distilation Unstable echo=FALSE, message=FALSE, warning=FALSE}
+#Distilation
+Dnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Distilation/Resultados-Distillation-inestable_-no-sat-13-7/Resultados Distillation inestable, no sat 13-7/", pattern = "ResultsIntrTransp3*", full.names = T)
+DistilationUnstableData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Dnames)){
+  if(i!=1){ 
+  SubjectDataM<-read.table(Dnames[i],header=TRUE,sep=",")
+ DistilationUnstableData<-bind_cols(DistilationUnstableData,SubjectDataM)
+  
+  
+  }
+  else if (i==1){DistilationUnstableData<-(SubjectDataM<-read.table(Dnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r Distilation Sat echo=FALSE, message=FALSE, warning=FALSE}
+#Distilation
+Dnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Distilation/Resultados-Distillation-estable_-sat-13-7/Resultados Distillation estable, sat 13-7/", pattern = "ResultsIntrTransp3*", full.names = T)
+DistilationSatData<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Dnames)){
+  if(i!=1){ 
+  SubjectData<-read.table(Dnames[i],header=TRUE,sep=",")
+ DistilationSatData<-bind_cols(DistilationSatData,SubjectData)
+  
+  
+  }
+  else if (i==1){DistilationSatData<-(SubjectData<-read.table(Dnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+```{r Distilation Transporte Retrogrado echo=FALSE, message=FALSE, warning=FALSE}
+#Distilation
+Dnames<-list.files(path = "/home/user/Desktop/Pasantia/datos_franco/Results-memC3-in-C4&C1/", pattern = "ResultsIntrTransp3*", full.names = T)
+DistilationRetro<-data.frame(matrix(nrow=150,ncol=64))
+for (i in 1:length(Dnames)){
+  if(i!=1){ 
+  SubjectData<-read.table(Dnames[i],header=TRUE,sep=",")
+  SubjectData<-SubjectData[1:596,]
+ DistilationRetro<-bind_cols(DistilationRetro,SubjectData)
+  
+  
+  }
+  else if (i==1){DistilationRetro<-(SubjectData<-read.table(Dnames[i],header=TRUE,sep=","))
+  }}
+
+#write.csv(VesciularT5Data,'/home/user/Desktop/Pasantia/FroozenEndosomes/5cisternas/VesciularT5Data',row.names = T)
+```
+
+**Banderas**
+*VESICULAR TRANSPORT*
+```{r banderaVesicularMean echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(VesicularTFCisternAreaData[,c("RabB","RabB1","RabB2","RabB3","RabB4","RabB5","RabB6","RabB7","RabB8","RabB9")])
+C3<-rowMeans(VesicularTFCisternAreaData[,c("RabC","RabC1","RabC2","RabC3","RabC4","RabC5","RabC6","RabC7","RabC8","RabC9")])
+C4<-rowMeans(VesicularTFCisternAreaData[,c("RabD","RabD1","RabD2","RabD3","RabD4","RabD5","RabD6","RabD7","RabD8","RabD9")])
+C5<-rowMeans(VesicularTFCisternAreaData[,c("RabE","RabE1","RabE2","RabE3","RabE4","RabE5","RabE6","RabE7","RabE8","RabE9")])
+C1<-rowMeans(VesicularTFCisternAreaData[,c("RabA","RabA1","RabA2","RabA3","RabA4","RabA5","RabA6","RabA7","RabA8","RabA9")])
+
+dataframepromedioD1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+#+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =75 ))+theme(axis.title = element_text(size = 80))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))
+CisternAreaGrafPromedio
+ggsave("BanderaUnstableVesicularMean.png",plot = CisternAreaGrafPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r banderaVesicularCorrida1 echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-VesicularTFCisternAreaData$RabB #rowMeans(VesicularTFCisternAreaData[,c("RabB","RabB1","RabB2","RabB3","RabB4","RabB5","RabB6","RabB7","RabB8","RabB9")])
+C3<-VesicularTFCisternAreaData$RabC
+  #rowMeans(VesicularTFCisternAreaData[,c("RabC","RabC1","RabC2","RabC3","RabC4","RabC5","RabC6","RabC7","RabC8","RabC9")])
+C4<-VesicularTFCisternAreaData$RabD
+  #rowMeans(VesicularTFCisternAreaData[,c("RabD","RabD1","RabD2","RabD3","RabD4","RabD5","RabD6","RabD7","RabD8","RabD9")])
+C5<-VesicularTFCisternAreaData$RabE
+  #rowMeans(VesicularTFCisternAreaData[,c("RabE","RabE1","RabE2","RabE3","RabE4","RabE5","RabE6","RabE7","RabE8","RabE9")])
+C1<-VesicularTFCisternAreaData$RabA
+  #rowMeans(VesicularTFCisternAreaData[,c("RabA","RabA1","RabA2","RabA3","RabA4","RabA5","RabA6","RabA7","RabA8","RabA9")])
+
+dataframepromedioD1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))#+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =75 ))+theme(axis.title = element_text(size = 80))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))
+CisternAreaGrafPromedio
+ggsave("BanderaUnstableVesicularcorrida1.png",plot = CisternAreaGrafPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r banderaVesicularCorrida2 echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-VesicularTFCisternAreaData$RabB1 #rowMeans(VesicularTFCisternAreaData[,c("RabB","RabB1","RabB2","RabB3","RabB4","RabB5","RabB6","RabB7","RabB8","RabB9")])
+C3<-VesicularTFCisternAreaData$RabC1
+  #rowMeans(VesicularTFCisternAreaData[,c("RabC","RabC1","RabC2","RabC3","RabC4","RabC5","RabC6","RabC7","RabC8","RabC9")])
+C4<-VesicularTFCisternAreaData$RabD1
+  #rowMeans(VesicularTFCisternAreaData[,c("RabD","RabD1","RabD2","RabD3","RabD4","RabD5","RabD6","RabD7","RabD8","RabD9")])
+C5<-VesicularTFCisternAreaData$RabE1
+  #rowMeans(VesicularTFCisternAreaData[,c("RabE","RabE1","RabE2","RabE3","RabE4","RabE5","RabE6","RabE7","RabE8","RabE9")])
+C1<-VesicularTFCisternAreaData$RabA1
+  #rowMeans(VesicularTFCisternAreaData[,c("RabA","RabA1","RabA2","RabA3","RabA4","RabA5","RabA6","RabA7","RabA8","RabA9")])
+
+dataframepromedioD1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))#+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =75 ))+theme(axis.title = element_text(size = 80))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))
+CisternAreaGrafPromedio
+ggsave("BanderaUnstableVesicularcorrida2.png",plot = CisternAreaGrafPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+*MATURATION*
+```{r banderaMaturationUnstableMean echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-rowMeans(MaturationCisternAreaData[,c("RabB","RabB1","RabB2","RabB3","RabB4","RabB5","RabB6","RabB7","RabB8","RabB9")])
+C3<-rowMeans(MaturationCisternAreaData[,c("RabC","RabC1","RabC2","RabC3","RabC4","RabC5","RabC6","RabC7","RabC8","RabC9")])
+C4<-rowMeans(MaturationCisternAreaData[,c("RabD","RabD1","RabD2","RabD3","RabD4","RabD5","RabD6","RabD7","RabD8","RabD9")])
+C5<-rowMeans(MaturationCisternAreaData[,c("RabE","RabE1","RabE2","RabE3","RabE4","RabE5","RabE6","RabE7","RabE8","RabE9")])
+C1<-rowMeans(MaturationCisternAreaData[,c("RabA","RabA1","RabA2","RabA3","RabA4","RabA5","RabA6","RabA7","RabA8","RabA9")])
+
+dataframepromedioD1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+#+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =75 ))+theme(axis.title = element_text(size = 80))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))
+CisternAreaGrafPromedio
+ggsave("BanderaMaturationUnstableMean.png",plot = CisternAreaGrafPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r banderaMaturationUnstableCorrida1 echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-MaturationCisternAreaData$RabB #rowMeans(MaturationCisternAreaData[,c("RabB","RabB1","RabB2","RabB3","RabB4","RabB5","RabB6","RabB7","RabB8","RabB9")])
+C3<-MaturationCisternAreaData$RabC
+  #rowMeans(MaturationCisternAreaData[,c("RabC","RabC1","RabC2","RabC3","RabC4","RabC5","RabC6","RabC7","RabC8","RabC9")])
+C4<-MaturationCisternAreaData$RabD
+  #rowMeans(MaturationCisternAreaData[,c("RabD","RabD1","RabD2","RabD3","RabD4","RabD5","RabD6","RabD7","RabD8","RabD9")])
+C5<-MaturationCisternAreaData$RabE
+  #rowMeans(MaturationCisternAreaData[,c("RabE","RabE1","RabE2","RabE3","RabE4","RabE5","RabE6","RabE7","RabE8","RabE9")])
+C1<-MaturationCisternAreaData$RabA
+  #rowMeans(MaturationCisternAreaData[,c("RabA","RabA1","RabA2","RabA3","RabA4","RabA5","RabA6","RabA7","RabA8","RabA9")])
+
+dataframepromedioD1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+#+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =75 ))+theme(axis.title = element_text(size = 80))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))
+CisternAreaGrafPromedio
+ggsave("BanderaMaturationUnstablecorrida1.png",plot = CisternAreaGrafPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+```{r banderaMaturationCorrida2 echo=FALSE, message=FALSE, warning=FALSE}
+
+C2<-MaturationCisternAreaData$RabB1 #rowMeans(MaturationCisternAreaData[,c("RabB","RabB1","RabB2","RabB3","RabB4","RabB5","RabB6","RabB7","RabB8","RabB9")])
+C3<-MaturationCisternAreaData$RabC1
+  #rowMeans(MaturationCisternAreaData[,c("RabC","RabC1","RabC2","RabC3","RabC4","RabC5","RabC6","RabC7","RabC8","RabC9")])
+C4<-MaturationCisternAreaData$RabD1
+  #rowMeans(MaturationCisternAreaData[,c("RabD","RabD1","RabD2","RabD3","RabD4","RabD5","RabD6","RabD7","RabD8","RabD9")])
+C5<-MaturationCisternAreaData$RabE1
+  #rowMeans(MaturationCisternAreaData[,c("RabE","RabE1","RabE2","RabE3","RabE4","RabE5","RabE6","RabE7","RabE8","RabE9")])
+C1<-MaturationCisternAreaData$RabA1
+  #rowMeans(MaturationCisternAreaData[,c("RabA","RabA1","RabA2","RabA3","RabA4","RabA5","RabA6","RabA7","RabA8","RabA9")])
+
+dataframepromedioD1CisternArea<-data.frame(C5,C4,C3,C2,C1)
+n<-length(dataframepromedioD1CisternArea$C1)*100
+ticks<-seq(100,n,by=100)
+dataframepromedioD1CisternArea$ticks<-ticks
+d1<-melt(dataframepromedioD1CisternArea,id.vars="ticks")
+CisternAreaGrafPromedio<-ggplot(d1, aes(x=ticks, y=value, fill=variable)) + geom_area()+labs(x="",y="")+ scale_fill_manual(values = c("C1" = "blue", "C2" = "skyblue2","C3"="green4","C4"="red","C5"="yellow"))+theme_classic()+scale_x_continuous(breaks= c(0,15000,30000,45000,60000))+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))#+theme(text=element_text(size = 30))+theme(legend.position="none")+theme(legend.title=element_blank())+theme(plot.title = element_text(hjust=0.7))+theme(axis.text.x =element_blank())+theme(axis.text.y = element_blank())+theme(legend.text = element_text(size =75 ))+theme(axis.title = element_text(size = 80))+theme(axis.line = element_line(size=3))+theme(axis.ticks = element_line(colour = "black", size = 3))
+CisternAreaGrafPromedio
+ggsave("BanderaMaturationUnstablecorrida2.png",plot = CisternAreaGrafPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png')
+```
+
+**Cargos**
+*VESICULAR TRANSPORT*
+```{r memTub, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 con fusion homotipica
+PostGolgimean<-rowMeans(VesicularTFData[,c("memTub","memTub1","memTub2","memTub3","memTub4","memTub5","memTub6","memTub7","memTub8","memTub9")])
+#RabEmean<-rowMeans(VesicularTFData[,c("memTubRabE","memTubRabE1","memTubRabE2","memTubRabE3","memTubRabE4","memTubRabE5","memTubRabE6","memTubRabE7","memTubRabE8","memTubRabE9")])
+RabAmean<-rowMeans(VesicularTFData[,c("memTubRabA","memTubRabA1","memTubRabA2","memTubRabA3","memTubRabA4","memTubRabA5","memTubRabA6","memTubRabA7","memTubRabA8","memTubRabA9")])
+#C1
+runC11<-VesicularTFData$memTubRabA
+runC12<-VesicularTFData$memTubRabA1
+runC13<-VesicularTFData$memTubRabA2
+runC14<-VesicularTFData$memTubRabA3
+runC15<-VesicularTFData$memTubRabA4
+runC16<-VesicularTFData$memTubRabA5
+runC17<-VesicularTFData$memTubRabA6
+runC18<-VesicularTFData$memTubRabA7
+runC19<-VesicularTFData$memTubRabA8
+runC110<-VesicularTFData$memTubRabA9
+#C5
+runC51<-VesicularTFData$memTub
+runC52<-VesicularTFData$memTub1
+runC53<-VesicularTFData$memTub2
+runC54<-VesicularTFData$memTub3
+runC55<-VesicularTFData$memTub4
+runC56<-VesicularTFData$memTub5
+runC57<-VesicularTFData$memTub6
+runC58<-VesicularTFData$memTub7
+runC59<-VesicularTFData$memTub8
+runC510<-VesicularTFData$memTub9
+dataframememTub<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC51,runC52,runC53,runC54,runC55,runC56,runC57,runC58,runC59,runC510
+,PostGolgimean)
+n<-length(dataframememTub$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframememTub$ticks<-ticks
+d1<-melt(dataframememTub,id.vars="ticks")
+memTubGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"PostGolgimean"= 2.5,"runC51"=1.0,"runC52"=1.0,"runC53"=1.0,"runC54"=1.0,"runC55"=1.0,"runC56"=1.0,"runC57"=1.0,"runC58"=1.0,"runC59"=1.0,"runC510"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC51"="grey","runC52"="grey","runC53"="grey","runC54"="grey","runC55"="grey","runC56"="grey","runC57"="grey","runC58"="grey","runC58"="grey","runC59"="grey","runC510"="grey","PostGolgimean" = "grey1"))+ylim(0,2)+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+memTubGrafDPromedio
+
+ggsave("memTubVesicularFMean.png",plot = memTubGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+```
+
+```{r memGolgiMedial, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 con fusion homotipica
+RabCmean<-rowMeans(VesicularTData[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2","memGolgiMedialRabC3","memGolgiMedialRabC4","memGolgiMedialRabC5","memGolgiMedialRabC6","memGolgiMedialRabC7","memGolgiMedialRabC8","memGolgiMedialRabC9")])
+#RabEmean<-rowMeans(VesicularTData[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2","memGolgiMedialRabE3","memGolgiMedialRabE4","memGolgiMedialRabE5","memGolgiMedialRabE6","memGolgiMedialRabE7","memGolgiMedialRabE8","memGolgiMedialRabE9")])
+RabAmean<-rowMeans(VesicularTData[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2","memGolgiMedialRabA3","memGolgiMedialRabA4","memGolgiMedialRabA5","memGolgiMedialRabA6","memGolgiMedialRabA7","memGolgiMedialRabA8","memGolgiMedialRabA9")])
+#C1
+runC11<-VesicularTData$memGolgiMedialRabA
+runC12<-VesicularTData$memGolgiMedialRabA1
+runC13<-VesicularTData$memGolgiMedialRabA2
+runC14<-VesicularTData$memGolgiMedialRabA3
+runC15<-VesicularTData$memGolgiMedialRabA4
+runC16<-VesicularTData$memGolgiMedialRabA5
+runC17<-VesicularTData$memGolgiMedialRabA6
+runC18<-VesicularTData$memGolgiMedialRabA7
+runC19<-VesicularTData$memGolgiMedialRabA8
+runC110<-VesicularTData$memGolgiMedialRabA9
+#C3
+runC31<-VesicularTData$memGolgiMedialRabC
+runC32<-VesicularTData$memGolgiMedialRabC1
+runC33<-VesicularTData$memGolgiMedialRabC2
+runC34<-VesicularTData$memGolgiMedialRabC3
+runC35<-VesicularTData$memGolgiMedialRabC4
+runC36<-VesicularTData$memGolgiMedialRabC5
+runC37<-VesicularTData$memGolgiMedialRabC6
+runC38<-VesicularTData$memGolgiMedialRabC7
+runC39<-VesicularTData$memGolgiMedialRabC8
+runC310<-VesicularTData$memGolgiMedialRabC9
+dataframememGolgiMedial<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC31,runC32,runC33,runC34,runC35,runC36,runC37,runC38,runC39,runC310
+,RabCmean)
+n<-length(dataframememGolgiMedial$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframememGolgiMedial$ticks<-ticks
+d1<-melt(dataframememGolgiMedial,id.vars="ticks")
+memGolgiMedialGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"RabCmean"= 2.5,"runC31"=1.0,"runC32"=1.0,"runC33"=1.0,"runC34"=1.0,"runC35"=1.0,"runC36"=1.0,"runC37"=1.0,"runC38"=1.0,"runC39"=1.0,"runC310"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC31"="greenyellow","runC32"="greenyellow","runC33"="greenyellow","runC34"="greenyellow","runC35"="greenyellow","runC36"="greenyellow","runC37"="greenyellow","runC38"="greenyellow","runC38"="greenyellow","runC39"="greenyellow","runC310"="greenyellow","RabCmean" = "green4"))+ylim(0,2)+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+memGolgiMedialGrafDPromedio
+
+ggsave("memGolgiMedialVesicularUnstableMean.png",plot = memGolgiMedialGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r memGolgiMedial, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 con fusion homotipica
+RabCmean<-rowMeans(VesicularTSatData[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2","memGolgiMedialRabC3","memGolgiMedialRabC4","memGolgiMedialRabC5","memGolgiMedialRabC6","memGolgiMedialRabC7","memGolgiMedialRabC8","memGolgiMedialRabC9")])
+#RabEmean<-rowMeans(VesicularTSatData[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2","memGolgiMedialRabE3","memGolgiMedialRabE4","memGolgiMedialRabE5","memGolgiMedialRabE6","memGolgiMedialRabE7","memGolgiMedialRabE8","memGolgiMedialRabE9")])
+RabAmean<-rowMeans(VesicularTSatData[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2","memGolgiMedialRabA3","memGolgiMedialRabA4","memGolgiMedialRabA5","memGolgiMedialRabA6","memGolgiMedialRabA7","memGolgiMedialRabA8","memGolgiMedialRabA9")])
+#C1
+runC11<-VesicularTSatData$memGolgiMedialRabA
+runC12<-VesicularTSatData$memGolgiMedialRabA1
+runC13<-VesicularTSatData$memGolgiMedialRabA2
+runC14<-VesicularTSatData$memGolgiMedialRabA3
+runC15<-VesicularTSatData$memGolgiMedialRabA4
+runC16<-VesicularTSatData$memGolgiMedialRabA5
+runC17<-VesicularTSatData$memGolgiMedialRabA6
+runC18<-VesicularTSatData$memGolgiMedialRabA7
+runC19<-VesicularTSatData$memGolgiMedialRabA8
+runC110<-VesicularTSatData$memGolgiMedialRabA9
+#C3
+runC31<-VesicularTSatData$memGolgiMedialRabC
+runC32<-VesicularTSatData$memGolgiMedialRabC1
+runC33<-VesicularTSatData$memGolgiMedialRabC2
+runC34<-VesicularTSatData$memGolgiMedialRabC3
+runC35<-VesicularTSatData$memGolgiMedialRabC4
+runC36<-VesicularTSatData$memGolgiMedialRabC5
+runC37<-VesicularTSatData$memGolgiMedialRabC6
+runC38<-VesicularTSatData$memGolgiMedialRabC7
+runC39<-VesicularTSatData$memGolgiMedialRabC8
+runC310<-VesicularTSatData$memGolgiMedialRabC9
+dataframememGolgiMedial<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC31,runC32,runC33,runC34,runC35,runC36,runC37,runC38,runC39,runC310
+,RabCmean)
+n<-length(dataframememGolgiMedial$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframememGolgiMedial$ticks<-ticks
+d1<-melt(dataframememGolgiMedial,id.vars="ticks")
+memGolgiMedialGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"RabCmean"= 2.5,"runC31"=1.0,"runC32"=1.0,"runC33"=1.0,"runC34"=1.0,"runC35"=1.0,"runC36"=1.0,"runC37"=1.0,"runC38"=1.0,"runC39"=1.0,"runC310"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC31"="greenyellow","runC32"="greenyellow","runC33"="greenyellow","runC34"="greenyellow","runC35"="greenyellow","runC36"="greenyellow","runC37"="greenyellow","runC38"="greenyellow","runC38"="greenyellow","runC39"="greenyellow","runC310"="greenyellow","RabCmean" = "green4"))+ylim(0,2)+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+memGolgiMedialGrafDPromedio
+
+ggsave("memGolgiMedialVesicularSat.png",plot = memGolgiMedialGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+*MATURATION*
+```{r solS, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 con fusion homotipica
+PostGolgimean<-rowMeans(MaturationUnstableData[,c("solS","solS1","solS2","solS3","solS4","solS5","solS6","solS7","solS8","solS9")])
+#RabEmean<-rowMeans(MaturationUnstableData[,c("solSRabE","solSRabE1","solSRabE2","solSRabE3","solSRabE4","solSRabE5","solSRabE6","solSRabE7","solSRabE8","solSRabE9")])
+RabAmean<-rowMeans(MaturationUnstableData[,c("solSRabA","solSRabA1","solSRabA2","solSRabA3","solSRabA4","solSRabA5","solSRabA6","solSRabA7","solSRabA8","solSRabA9")])
+#C1
+runC11<-MaturationUnstableData$solSRabA
+runC12<-MaturationUnstableData$solSRabA1
+runC13<-MaturationUnstableData$solSRabA2
+runC14<-MaturationUnstableData$solSRabA3
+runC15<-MaturationUnstableData$solSRabA4
+runC16<-MaturationUnstableData$solSRabA5
+runC17<-MaturationUnstableData$solSRabA6
+runC18<-MaturationUnstableData$solSRabA7
+runC19<-MaturationUnstableData$solSRabA8
+runC110<-MaturationUnstableData$solSRabA9
+#C5
+runC51<-MaturationUnstableData$solS
+runC52<-MaturationUnstableData$solS1
+runC53<-MaturationUnstableData$solS2
+runC54<-MaturationUnstableData$solS3
+runC55<-MaturationUnstableData$solS4
+runC56<-MaturationUnstableData$solS5
+runC57<-MaturationUnstableData$solS6
+runC58<-MaturationUnstableData$solS7
+runC59<-MaturationUnstableData$solS8
+runC510<-MaturationUnstableData$solS9
+dataframesolS<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC51,runC52,runC53,runC54,runC55,runC56,runC57,runC58,runC59,runC510
+,PostGolgimean)
+n<-length(dataframesolS$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframesolS$ticks<-ticks
+d1<-melt(dataframesolS,id.vars="ticks")
+solSGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"PostGolgimean"= 2.5,"runC51"=1.0,"runC52"=1.0,"runC53"=1.0,"runC54"=1.0,"runC55"=1.0,"runC56"=1.0,"runC57"=1.0,"runC58"=1.0,"runC59"=1.0,"runC510"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC51"="grey","runC52"="grey","runC53"="grey","runC54"="grey","runC55"="grey","runC56"="grey","runC57"="grey","runC58"="grey","runC58"="grey","runC59"="grey","runC510"="grey","PostGolgimean" = "grey1"))+ylim(0,2)+theme_classic()+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+solSGrafDPromedio
+
+ggsave("solSMaturationUnstable.png",plot = solSGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+```
+
+```{r memLS, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 
+RabCmean<-rowMeans(MaturationData[,c("memLSRabC","memLSRabC1","memLSRabC2","memLSRabC3","memLSRabC4","memLSRabC5","memLSRabC6","memLSRabC7","memLSRabC8","memLSRabC9")])
+#RabEmean<-rowMeans(MaturationData[,c("memLSRabE","memLSRabE1","memLSRabE2","memLSRabE3","memLSRabE4","memLSRabE5","memLSRabE6","memLSRabE7","memLSRabE8","memLSRabE9")])
+RabAmean<-rowMeans(MaturationData[,c("memLSRabA","memLSRabA1","memLSRabA2","memLSRabA3","memLSRabA4","memLSRabA5","memLSRabA6","memLSRabA7","memLSRabA8","memLSRabA9")])
+#C1
+runC11<-MaturationData$memLSRabA
+runC12<-MaturationData$memLSRabA1
+runC13<-MaturationData$memLSRabA2
+runC14<-MaturationData$memLSRabA3
+runC15<-MaturationData$memLSRabA4
+runC16<-MaturationData$memLSRabA5
+runC17<-MaturationData$memLSRabA6
+runC18<-MaturationData$memLSRabA7
+runC19<-MaturationData$memLSRabA8
+runC110<-MaturationData$memLSRabA9
+#C3
+runC31<-MaturationData$memLSRabC
+runC32<-MaturationData$memLSRabC1
+runC33<-MaturationData$memLSRabC2
+runC34<-MaturationData$memLSRabC3
+runC35<-MaturationData$memLSRabC4
+runC36<-MaturationData$memLSRabC5
+runC37<-MaturationData$memLSRabC6
+runC38<-MaturationData$memLSRabC7
+runC39<-MaturationData$memLSRabC8
+runC310<-MaturationData$memLSRabC9
+dataframememLS<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC31,runC32,runC33,runC34,runC35,runC36,runC37,runC38,runC39,runC310
+,RabCmean)
+n<-length(dataframememLS$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframememLS$ticks<-ticks
+d1<-melt(dataframememLS,id.vars="ticks")
+memLSGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"RabCmean"= 2.5,"runC31"=1.0,"runC32"=1.0,"runC33"=1.0,"runC34"=1.0,"runC35"=1.0,"runC36"=1.0,"runC37"=1.0,"runC38"=1.0,"runC39"=1.0,"runC310"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC31"="greenyellow","runC32"="greenyellow","runC33"="greenyellow","runC34"="greenyellow","runC35"="greenyellow","runC36"="greenyellow","runC37"="greenyellow","runC38"="greenyellow","runC38"="greenyellow","runC39"="greenyellow","runC310"="greenyellow","RabCmean" = "green4"))+ylim(0,2)+theme_classic()+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+memLSGrafDPromedio
+
+ggsave("memLSMaturationMean.png",plot = memLSGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r memLS, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 
+RabCmean<-rowMeans(MaturationSatData[,c("memLSRabC","memLSRabC1","memLSRabC2","memLSRabC3","memLSRabC4","memLSRabC5","memLSRabC6","memLSRabC7","memLSRabC8","memLSRabC9")])
+#RabEmean<-rowMeans(MaturationSatData[,c("memLSRabE","memLSRabE1","memLSRabE2","memLSRabE3","memLSRabE4","memLSRabE5","memLSRabE6","memLSRabE7","memLSRabE8","memLSRabE9")])
+RabAmean<-rowMeans(MaturationSatData[,c("memLSRabA","memLSRabA1","memLSRabA2","memLSRabA3","memLSRabA4","memLSRabA5","memLSRabA6","memLSRabA7","memLSRabA8","memLSRabA9")])
+#C1
+runC11<-MaturationSatData$memLSRabA
+runC12<-MaturationSatData$memLSRabA1
+runC13<-MaturationSatData$memLSRabA2
+runC14<-MaturationSatData$memLSRabA3
+runC15<-MaturationSatData$memLSRabA4
+runC16<-MaturationSatData$memLSRabA5
+runC17<-MaturationSatData$memLSRabA6
+runC18<-MaturationSatData$memLSRabA7
+runC19<-MaturationSatData$memLSRabA8
+runC110<-MaturationSatData$memLSRabA9
+#C3
+runC31<-MaturationSatData$memLSRabC
+runC32<-MaturationSatData$memLSRabC1
+runC33<-MaturationSatData$memLSRabC2
+runC34<-MaturationSatData$memLSRabC3
+runC35<-MaturationSatData$memLSRabC4
+runC36<-MaturationSatData$memLSRabC5
+runC37<-MaturationSatData$memLSRabC6
+runC38<-MaturationSatData$memLSRabC7
+runC39<-MaturationSatData$memLSRabC8
+runC310<-MaturationSatData$memLSRabC9
+dataframememLS<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC31,runC32,runC33,runC34,runC35,runC36,runC37,runC38,runC39,runC310
+,RabCmean)
+n<-length(dataframememLS$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframememLS$ticks<-ticks
+d1<-melt(dataframememLS,id.vars="ticks")
+memLSGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"RabCmean"= 2.5,"runC31"=1.0,"runC32"=1.0,"runC33"=1.0,"runC34"=1.0,"runC35"=1.0,"runC36"=1.0,"runC37"=1.0,"runC38"=1.0,"runC39"=1.0,"runC310"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC31"="greenyellow","runC32"="greenyellow","runC33"="greenyellow","runC34"="greenyellow","runC35"="greenyellow","runC36"="greenyellow","runC37"="greenyellow","runC38"="greenyellow","runC38"="greenyellow","runC39"="greenyellow","runC310"="greenyellow","RabCmean" = "green4"))+ylim(0,2)+theme_classic()+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+memLSGrafDPromedio
+
+ggsave("memLSMaturationSat.png",plot = memLSGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+*DISTILATION*
+```{r solL, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 con fusion homotipica
+PostGolgimean<-rowMeans(DistilationUnstableData[,c("solL","solL1","solL2","solL3","solL4","solL5","solL6","solL7","solL8","solL9")])
+#RabEmean<-rowMeans(DistilationUnstableData[,c("solLRabE","solLRabE1","solLRabE2","solLRabE3","solLRabE4","solLRabE5","solLRabE6","solLRabE7","solLRabE8","solLRabE9")])
+RabAmean<-rowMeans(DistilationUnstableData[,c("solLRabA","solLRabA1","solLRabA2","solLRabA3","solLRabA4","solLRabA5","solLRabA6","solLRabA7","solLRabA8","solLRabA9")])
+#C1
+runC11<-DistilationUnstableData$solLRabA
+runC12<-DistilationUnstableData$solLRabA1
+runC13<-DistilationUnstableData$solLRabA2
+runC14<-DistilationUnstableData$solLRabA3
+runC15<-DistilationUnstableData$solLRabA4
+runC16<-DistilationUnstableData$solLRabA5
+runC17<-DistilationUnstableData$solLRabA6
+runC18<-DistilationUnstableData$solLRabA7
+runC19<-DistilationUnstableData$solLRabA8
+runC110<-DistilationUnstableData$solLRabA9
+#C5
+runC51<-DistilationUnstableData$solL
+runC52<-DistilationUnstableData$solL1
+runC53<-DistilationUnstableData$solL2
+runC54<-DistilationUnstableData$solL3
+runC55<-DistilationUnstableData$solL4
+runC56<-DistilationUnstableData$solL5
+runC57<-DistilationUnstableData$solL6
+runC58<-DistilationUnstableData$solL7
+runC59<-DistilationUnstableData$solL8
+runC510<-DistilationUnstableData$solL9
+dataframesolL<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC51,runC52,runC53,runC54,runC55,runC56,runC57,runC58,runC59,runC510
+,PostGolgimean)
+n<-length(dataframesolL$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframesolL$ticks<-ticks
+d1<-melt(dataframesolL,id.vars="ticks")
+solLGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"PostGolgimean"= 2.5,"runC51"=1.0,"runC52"=1.0,"runC53"=1.0,"runC54"=1.0,"runC55"=1.0,"runC56"=1.0,"runC57"=1.0,"runC58"=1.0,"runC59"=1.0,"runC510"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC51"="grey","runC52"="grey","runC53"="grey","runC54"="grey","runC55"="grey","runC56"="grey","runC57"="grey","runC58"="grey","runC58"="grey","runC59"="grey","runC510"="grey","PostGolgimean" = "grey1"))+ylim(0,2)+theme_classic()+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+solLGrafDPromedio
+
+ggsave("solLDistilationUnstable.png",plot = solLGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r memGolgiMedialRETRO, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 
+RabCmean<-rowMeans(DistilationRetro[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2","memGolgiMedialRabC3","memGolgiMedialRabC4","memGolgiMedialRabC5","memGolgiMedialRabC6","memGolgiMedialRabC7","memGolgiMedialRabC8","memGolgiMedialRabC9")])
+RabDmean<-rowMeans(DistilationRetro[,c("memGolgiMedialRabD","memGolgiMedialRabD1","memGolgiMedialRabD2","memGolgiMedialRabD3","memGolgiMedialRabD4","memGolgiMedialRabD5","memGolgiMedialRabD6","memGolgiMedialRabD7","memGolgiMedialRabD8","memGolgiMedialRabD9")])
+#RabEmean<-rowMeans(DistilationRetro[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2","memGolgiMedialRabE3","memGolgiMedialRabE4","memGolgiMedialRabE5","memGolgiMedialRabE6","memGolgiMedialRabE7","memGolgiMedialRabE8","memGolgiMedialRabE9")])
+RabAmean<-rowMeans(DistilationRetro[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2","memGolgiMedialRabA3","memGolgiMedialRabA4","memGolgiMedialRabA5","memGolgiMedialRabA6","memGolgiMedialRabA7","memGolgiMedialRabA8","memGolgiMedialRabA9")])
+#C1
+runC11<-DistilationRetro$memGolgiMedialRabA
+runC12<-DistilationRetro$memGolgiMedialRabA1
+runC13<-DistilationRetro$memGolgiMedialRabA2
+runC14<-DistilationRetro$memGolgiMedialRabA3
+runC15<-DistilationRetro$memGolgiMedialRabA4
+runC16<-DistilationRetro$memGolgiMedialRabA5
+runC17<-DistilationRetro$memGolgiMedialRabA6
+runC18<-DistilationRetro$memGolgiMedialRabA7
+runC19<-DistilationRetro$memGolgiMedialRabA8
+runC110<-DistilationRetro$memGolgiMedialRabA9
+#C3
+runC31<-DistilationRetro$memGolgiMedialRabC
+runC32<-DistilationRetro$memGolgiMedialRabC1
+runC33<-DistilationRetro$memGolgiMedialRabC2
+runC34<-DistilationRetro$memGolgiMedialRabC3
+runC35<-DistilationRetro$memGolgiMedialRabC4
+runC36<-DistilationRetro$memGolgiMedialRabC5
+runC37<-DistilationRetro$memGolgiMedialRabC6
+runC38<-DistilationRetro$memGolgiMedialRabC7
+runC39<-DistilationRetro$memGolgiMedialRabC8
+runC310<-DistilationRetro$memGolgiMedialRabC9
+#C4
+runC41<-DistilationRetro$memGolgiMedialRabD
+runC42<-DistilationRetro$memGolgiMedialRabD1
+runC43<-DistilationRetro$memGolgiMedialRabD2
+runC44<-DistilationRetro$memGolgiMedialRabD3
+runC45<-DistilationRetro$memGolgiMedialRabD4
+runC46<-DistilationRetro$memGolgiMedialRabD5
+runC47<-DistilationRetro$memGolgiMedialRabD6
+runC48<-DistilationRetro$memGolgiMedialRabD7
+runC49<-DistilationRetro$memGolgiMedialRabD8
+runC410<-DistilationRetro$memGolgiMedialRabD9
+dataframememGolgiMedial<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC31,runC32,runC33,runC34,runC35,runC36,runC37,runC38,runC39,runC310
+,RabCmean,runC41,runC42,runC43,runC44,runC45,runC46,runC47,runC48,runC49,runC410
+,RabDmean)
+n<-length(dataframememGolgiMedial$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframememGolgiMedial$ticks<-ticks
+d1<-melt(dataframememGolgiMedial,id.vars="ticks")
+memGolgiMedialGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"RabCmean"= 2.5,"runC31"=1.0,"runC32"=1.0,"runC33"=1.0,"runC34"=1.0,"runC35"=1.0,"runC36"=1.0,"runC37"=1.0,"runC38"=1.0,"runC39"=1.0,"runC310"=1.0,"RabDmean"= 2.5,"runC41"=1.0,"runC42"=1.0,"runC43"=1.0,"runC44"=1.0,"runC45"=1.0,"runC46"=1.0,"runC47"=1.0,"runC48"=1.0,"runC49"=1.0,"runC410"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC31"="greenyellow","runC32"="greenyellow","runC33"="greenyellow","runC34"="greenyellow","runC35"="greenyellow","runC36"="greenyellow","runC37"="greenyellow","runC38"="greenyellow","runC38"="greenyellow","runC39"="greenyellow","runC310"="greenyellow","RabCmean" = "green4","runC41"="lightcoral","runC42"="lightcoral","runC43"="lightcoral","runC44"="lightcoral","runC45"="lightcoral","runC46"="lightcoral","runC47"="lightcoral","runC48"="lightcoral","runC48"="lightcoral","runC49"="lightcoral","runC410"="lightcoral","RabDmean" = "red"))+ylim(0,2)+theme_classic()+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+memGolgiMedialGrafDPromedio
+
+ggsave("memGolgiMedialDistilationRetro.png",plot = memGolgiMedialGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
+
+```{r memGolgiMedialSat, echo=FALSE, message=FALSE, warning=FALSE}
+#Figura 2 con fusion homotipica
+RabCmean<-rowMeans(DistilationSatData[,c("memGolgiMedialRabC","memGolgiMedialRabC1","memGolgiMedialRabC2","memGolgiMedialRabC3","memGolgiMedialRabC4","memGolgiMedialRabC5","memGolgiMedialRabC6","memGolgiMedialRabC7","memGolgiMedialRabC8","memGolgiMedialRabC9")])
+#RabEmean<-rowMeans(DistilationSatData[,c("memGolgiMedialRabE","memGolgiMedialRabE1","memGolgiMedialRabE2","memGolgiMedialRabE3","memGolgiMedialRabE4","memGolgiMedialRabE5","memGolgiMedialRabE6","memGolgiMedialRabE7","memGolgiMedialRabE8","memGolgiMedialRabE9")])
+RabAmean<-rowMeans(DistilationSatData[,c("memGolgiMedialRabA","memGolgiMedialRabA1","memGolgiMedialRabA2","memGolgiMedialRabA3","memGolgiMedialRabA4","memGolgiMedialRabA5","memGolgiMedialRabA6","memGolgiMedialRabA7","memGolgiMedialRabA8","memGolgiMedialRabA9")])
+#C1
+runC11<-DistilationSatData$memGolgiMedialRabA
+runC12<-DistilationSatData$memGolgiMedialRabA1
+runC13<-DistilationSatData$memGolgiMedialRabA2
+runC14<-DistilationSatData$memGolgiMedialRabA3
+runC15<-DistilationSatData$memGolgiMedialRabA4
+runC16<-DistilationSatData$memGolgiMedialRabA5
+runC17<-DistilationSatData$memGolgiMedialRabA6
+runC18<-DistilationSatData$memGolgiMedialRabA7
+runC19<-DistilationSatData$memGolgiMedialRabA8
+runC110<-DistilationSatData$memGolgiMedialRabA9
+#C3
+runC31<-DistilationSatData$memGolgiMedialRabC
+runC32<-DistilationSatData$memGolgiMedialRabC1
+runC33<-DistilationSatData$memGolgiMedialRabC2
+runC34<-DistilationSatData$memGolgiMedialRabC3
+runC35<-DistilationSatData$memGolgiMedialRabC4
+runC36<-DistilationSatData$memGolgiMedialRabC5
+runC37<-DistilationSatData$memGolgiMedialRabC6
+runC38<-DistilationSatData$memGolgiMedialRabC7
+runC39<-DistilationSatData$memGolgiMedialRabC8
+runC310<-DistilationSatData$memGolgiMedialRabC9
+dataframememGolgiMedial<-data.frame(runC11,runC12,runC13,runC14,runC15,runC16,runC17,runC18,runC19,runC110,RabAmean, runC31,runC32,runC33,runC34,runC35,runC36,runC37,runC38,runC39,runC310
+,RabCmean)
+n<-length(dataframememGolgiMedial$RabAmean)*100
+ticks<-seq(100,n,by=100)
+dataframememGolgiMedial$ticks<-ticks
+d1<-melt(dataframememGolgiMedial,id.vars="ticks")
+memGolgiMedialGrafDPromedio<-ggplot(d1,aes(x=ticks,y=value,color=variable,size=variable))+geom_point()+geom_line(aes(x=ticks,y=value,color=variable))+labs(x="",y="")+scale_size_manual(values=c("RabAmean"= 2.5,"runC11"=1.0,"runC12"=1.0,"runC13"=1.0,"runC14"=1.0,"runC15"=1.0,"runC16"=1.0,"runC17"=1.0,"runC18"=1.0,"runC19"=1.0,"runC110"=1.0,"RabCmean"= 2.5,"runC31"=1.0,"runC32"=1.0,"runC33"=1.0,"runC34"=1.0,"runC35"=1.0,"runC36"=1.0,"runC37"=1.0,"runC38"=1.0,"runC39"=1.0,"runC310"=1.0))+scale_color_manual(values = c("runC11"="skyblue1","runC12"="skyblue1","runC13"="skyblue1","runC14"="skyblue1","runC15"="skyblue1","runC16"="skyblue1","runC17"="skyblue1","runC18"="skyblue1","runC18"="skyblue1","runC19"="skyblue1","runC110"="skyblue1","RabAmean" = "blue","runC31"="greenyellow","runC32"="greenyellow","runC33"="greenyellow","runC34"="greenyellow","runC35"="greenyellow","runC36"="greenyellow","runC37"="greenyellow","runC38"="greenyellow","runC38"="greenyellow","runC39"="greenyellow","runC310"="greenyellow","RabCmean" = "green4"))+ylim(0,2)+theme_classic()+theme(legend.key.size = unit(3, "cm"))+theme(legend.position="none",axis.ticks.length=unit(0.5, "cm"),legend.title=element_blank(),axis.text =element_blank(),axis.line = element_line(size=3),axis.ticks = element_line(colour = "black", size = 3),text=element_text(size = 30))
+memGolgiMedialGrafDPromedio
+
+ggsave("memGolgiMedialDistilationSat.png",plot = memGolgiMedialGrafDPromedio,width = 26, height = 20, dpi = 150, units = "in", device='png' )
+
+```
